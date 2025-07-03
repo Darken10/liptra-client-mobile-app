@@ -1,0 +1,72 @@
+[
+  {
+    "id": "seat1",
+    "number": "A01",
+    "status": "available",
+    "price": 45.99,
+    "type": "standard"
+  },
+  {
+    "id": "seat2",
+    "number": "A02",
+    "status": "available",
+    "price": 45.99,
+    "type": "standard"
+  },
+  {
+    "id": "seat3",
+    "number": "A03",
+    "status": "occupied",
+    "price": 45.99,
+    "type": "standard"
+  },
+  {
+    "id": "seat4",
+    "number": "A04",
+    "status": "available",
+    "price": 45.99,
+    "type": "standard"
+  },
+  {
+    "id": "seat5",
+    "number": "B01",
+    "status": "available",
+    "price": 55.99,
+    "type": "premium"
+  },
+  {
+    "id": "seat6",
+    "number": "B02",
+    "status": "occupied",
+    "price": 55.99,
+    "type": "premium"
+  },
+  {
+    "id": "seat7",
+    "number": "B03",
+    "status": "available",
+    "price": 55.99,
+    "type": "premium"
+  },
+  {
+    "id": "seat8",
+    "number": "B04",
+    "status": "available",
+    "price": 55.99,
+    "type": "premium"
+  },
+  {
+    "id": "seat9",
+    "number": "C01",
+    "status": "available",
+    "price": 75.99,
+    "type": "vip"
+  },
+  {
+    "id": "seat10",
+    "number": "C02",
+    "status": "available",
+    "price": 75.99,
+    "type": "vip"
+  }
+]

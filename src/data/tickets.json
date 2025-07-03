@@ -1,0 +1,184 @@
+[
+  {
+    "id": "ticket1",
+    "tripId": "trip1",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "A12",
+    "purchaseDate": "2025-06-10T15:30:00Z",
+    "travelDate": "2025-07-15T08:00:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-1234567890",
+    "status": "valid",
+    "trip": {
+      "departure": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-07-15T08:00:00Z"
+      },
+      "arrival": {
+        "city": "Bobo-Dioulasso",
+        "station": "Gare de Bobo Centre",
+        "time": "2025-07-15T14:00:00Z"
+      },
+      "company": "STAF",
+      "vehicleType": "bus",
+      "duration": "6h00"
+    }
+  },
+  {
+    "id": "ticket2",
+    "tripId": "trip2",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "B05",
+    "purchaseDate": "2025-06-12T09:45:00Z",
+    "travelDate": "2025-07-16T06:30:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-0987654321",
+    "status": "upcoming",
+    "trip": {
+      "departure": {
+        "city": "Koudougou",
+        "station": "Gare de Koudougou Nord",
+        "time": "2025-07-16T06:30:00Z"
+      },
+      "arrival": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-07-16T09:00:00Z"
+      },
+      "company": "TSR",
+      "vehicleType": "bus",
+      "duration": "2h30"
+    }
+  },
+  {
+    "id": "ticket3",
+    "tripId": "trip3",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "C14",
+    "purchaseDate": "2025-05-20T14:30:00Z",
+    "travelDate": "2025-06-05T10:00:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-5678901234",
+    "status": "used",
+    "trip": {
+      "departure": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-06-05T10:00:00Z"
+      },
+      "arrival": {
+        "city": "Fada N’Gourma",
+        "station": "Gare Routière Centrale",
+        "time": "2025-06-05T14:00:00Z"
+      },
+      "company": "RAK Transport",
+      "vehicleType": "bus",
+      "duration": "4h00"
+    }
+  },
+  {
+    "id": "ticket4",
+    "tripId": "trip4",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "D22",
+    "purchaseDate": "2025-06-01T11:15:00Z",
+    "travelDate": "2025-06-18T14:45:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-1357924680",
+    "status": "cancelled",
+    "trip": {
+      "departure": {
+        "city": "Banfora",
+        "station": "Gare Banfora Ville",
+        "time": "2025-06-18T14:45:00Z"
+      },
+      "arrival": {
+        "city": "Bobo-Dioulasso",
+        "station": "Gare de Bobo Centre",
+        "time": "2025-06-18T17:00:00Z"
+      },
+      "company": "STAF",
+      "vehicleType": "bus",
+      "duration": "2h15"
+    }
+  },
+  {
+    "id": "ticket5",
+    "tripId": "trip5",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "E08, E09",
+    "purchaseDate": "2025-06-15T16:20:00Z",
+    "travelDate": "2025-06-20T05:30:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-2468013579",
+    "status": "past",
+    "trip": {
+      "departure": {
+        "city": "Ouahigouya",
+        "station": "Gare Ouahigouya",
+        "time": "2025-06-20T05:30:00Z"
+      },
+      "arrival": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-06-20T09:00:00Z"
+      },
+      "company": "TSR",
+      "vehicleType": "bus",
+      "duration": "3h30"
+    }
+  },
+  {
+    "id": "ticket6",
+    "tripId": "trip6",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "F17",
+    "purchaseDate": "2025-06-18T09:30:00Z",
+    "travelDate": "2025-07-10T13:00:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-9876543210",
+    "status": "blocked",
+    "trip": {
+      "departure": {
+        "city": "Tenkodogo",
+        "station": "Gare Tenkodogo Sud",
+        "time": "2025-07-10T13:00:00Z"
+      },
+      "arrival": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-07-10T16:00:00Z"
+      },
+      "company": "RAK Transport",
+      "vehicleType": "bus",
+      "duration": "3h00"
+    }
+  },
+  {
+    "id": "ticket7",
+    "tripId": "trip7",
+    "userId": "user1",
+    "passengerName": "Issa Sawadogo",
+    "seatNumber": "G03",
+    "purchaseDate": "2025-06-19T13:45:00Z",
+    "travelDate": "2025-07-25T06:00:00Z",
+    "qrCode": "BF-TRANSPORT-TICKET-1122334455",
+    "status": "upcoming",
+    "trip": {
+      "departure": {
+        "city": "Ouagadougou",
+        "station": "Gare de Ouaga Inter",
+        "time": "2025-07-25T06:00:00Z"
+      },
+      "arrival": {
+        "city": "Kaya",
+        "station": "Gare Routière de Kaya",
+        "time": "2025-07-25T08:00:00Z"
+      },
+      "company": "TSR",
+      "vehicleType": "bus",
+      "duration": "2h00"
+    }
+  }
+]
