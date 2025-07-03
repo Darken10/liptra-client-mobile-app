@@ -1,17 +1,17 @@
-import NotificationToast from '@/src/components/shared/NotificationToast';
-import { Notification } from '@/src/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { NotificationsService } from '../services/api.call';
+import NotificationToast from '../components/pages/notifications/NotificationToast';
+import notificationsData from '../data/notifications.json';
+import { Notification } from '../types';
 import { useAuth } from './AuthContext';
 
 // Type pour le contexte
 type NotificationContextType = {
   notifications: Notification[];
   unreadCount: number;
-  markAsRead: (id: string) => Promise<boolean>;
-  markAllAsRead: () => Promise<boolean>;
-  deleteNotification: (id: string) => Promise<boolean>;
-  deleteAllNotifications: () => Promise<boolean>;
+  markAsRead: (id: string) => void;
+  markAllAsRead: () => void;
+  deleteNotification: (id: string) => void;
+  deleteAllNotifications: () => void;
   createTicketNotification: (
     ticketId: string,
     action: 'created' | 'updated' | 'cancelled' | 'reminder',
@@ -47,107 +47,54 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        if (user) {
-          const response = await NotificationsService.getNotifications();
-          
-          if (response && response.status === "success" && response.data?.notifications) {
-            // Transformer les données de l'API au format attendu par l'application
-            const apiNotifications = response.data.notifications.data || [];
-            const formattedNotifications: Notification[] = apiNotifications.map((apiNotif: any) => ({
-              id: apiNotif.id.toString(),
-              title: apiNotif.title,
-              message: apiNotif.message,
-              type: apiNotif.type as 'info' | 'success' | 'warning' | 'error',
-              read: apiNotif.read_at !== null,
-              createdAt: apiNotif.created_at
-            }));
-
-            console.log('====================================');
-            console.log(formattedNotifications);
-            console.log('====================================');
-            
-            setNotifications(formattedNotifications);
-            
-            // Compter les notifications non lues
-            const unread = formattedNotifications.filter(notification => !notification.read).length;
-            setUnreadCount(unread);
-          } else {
-            setNotifications([]);
-            setUnreadCount(0);
-          }
-        } else {
-          setNotifications([]);
-          setUnreadCount(0);
-        }
+        // Pour les besoins de test, nous chargeons toujours les notifications
+        // même si l'utilisateur n'est pas authentifié
+        // Typer correctement les données de notification
+        const typedNotifications = notificationsData as Notification[];
+        setNotifications(typedNotifications);
+        
+        // Count unread notifications
+        const unread = typedNotifications.filter(notification => !notification.read).length;
+        setUnreadCount(unread);
       } catch (error) {
         console.error('Error fetching notifications:', error);
-        setNotifications([]);
-        setUnreadCount(0);
       }
     };
 
     fetchNotifications();
-  }, [user]);
+  }, []);
 
   // Marquer une notification comme lue
-  const markAsRead = async (id: string): Promise<boolean> => {
-    try {
-      const response = await NotificationsService.markAsRead(Number(id));
-      
-      if (response && response.status === 200) {
-        // Mettre à jour l'état local
-        const updatedNotifications = notifications.map(notification => {
-          if (notification.id === id && !notification.read) {
-            return {
-              ...notification,
-              read: true
-            };
-          }
-          return notification;
-        });
-        
-        setNotifications(updatedNotifications);
-        
-        // Mettre à jour le compteur de notifications non lues
-        const unread = updatedNotifications.filter(notification => !notification.read).length;
-        setUnreadCount(unread);
-        
-        return true;
+  const markAsRead = (id: string) => {
+    const updatedNotifications = notifications.map(notification => {
+      if (notification.id === id && !notification.read) {
+        return {
+          ...notification,
+          read: true
+        };
       }
-      
-      return false;
-    } catch (error) {
-      console.error(`Error marking notification ${id} as read:`, error);
-      return false;
-    }
+      return notification;
+    });
+    
+    setNotifications(updatedNotifications);
+    
+    // Update unread count
+    const unread = updatedNotifications.filter(notification => !notification.read).length;
+    setUnreadCount(unread);
   };
 
   // Marquer toutes les notifications comme lues
-  const markAllAsRead = async (): Promise<boolean> => {
-    try {
-      const response = await NotificationsService.markAllAsRead();
-      
-      if (response && response.status === 200) {
-        // Mettre à jour l'état local
-        const updatedNotifications = notifications.map(notification => ({
-          ...notification,
-          read: true
-        }));
-        
-        setNotifications(updatedNotifications);
-        setUnreadCount(0);
-        
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-      return false;
-    }
+  const markAllAsRead = () => {
+    const updatedNotifications = notifications.map(notification => ({
+      ...notification,
+      read: true
+    }));
+    
+    setNotifications(updatedNotifications);
+    setUnreadCount(0);
   };
 
-  // Créer une nouvelle notification locale (pas d'API pour créer des notifications côté client)
+  // Créer une nouvelle notification
   const createNotification = (params: {
     title: string;
     message: string;
@@ -172,47 +119,19 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   };
 
   // Supprimer une notification
-  const deleteNotification = async (id: string): Promise<boolean> => {
-    try {
-      const response = await NotificationsService.deleteNotification(Number(id));
-      
-      if (response &&  response.status === 200) {
-        // Mettre à jour l'état local
-        const updatedNotifications = notifications.filter(notification => notification.id !== id);
-        setNotifications(updatedNotifications);
-        
-        // Mettre à jour le compteur de notifications non lues
-        const unread = updatedNotifications.filter(notification => !notification.read).length;
-        setUnreadCount(unread);
-        
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error(`Error deleting notification ${id}:`, error);
-      return false;
-    }
+  const deleteNotification = (id: string) => {
+    const updatedNotifications = notifications.filter(notification => notification.id !== id);
+    setNotifications(updatedNotifications);
+    
+    // Mettre à jour le compteur de notifications non lues
+    const unread = updatedNotifications.filter(notification => !notification.read).length;
+    setUnreadCount(unread);
   };
 
   // Supprimer toutes les notifications
-  const deleteAllNotifications = async (): Promise<boolean> => {
-    try {
-      const response = await NotificationsService.deleteAllNotifications();
-      
-      if (response &&  response.status === 200) {
-        // Mettre à jour l'état local
-        setNotifications([]);
-        setUnreadCount(0);
-        
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error('Error deleting all notifications:', error);
-      return false;
-    }
+  const deleteAllNotifications = () => {
+    setNotifications([]);
+    setUnreadCount(0);
   };
 
   // Créer une notification pour un ticket

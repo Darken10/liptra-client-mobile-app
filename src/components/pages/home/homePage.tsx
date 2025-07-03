@@ -95,7 +95,7 @@ const posts : Post[] =  [
     title: "L'impact du numérique sur l'éducation au Burkina Faso",
     summary: "Le numérique transforme progressivement le système éducatif burkinabè.",
     content: "Avec l’essor des technologies, de nombreuses écoles adoptent des outils numériques...",
-    image: "https://picsum.photos/200/300",
+    image: "https://picsum.photos/200/300?random=1",
     category: "Éducation",
     tags: ["éducation", "numérique", "Burkina Faso"],
     publishedAt: "2025-07-01T08:00:00Z",
@@ -104,7 +104,7 @@ const posts : Post[] =  [
     author: {
       id: "U001",
       name: "Aïcha Ouédraogo",
-      avatar: "https://example.com/avatars/aicha.jpg"
+      avatar: "https://picsum.photos/200/300"
     }
   },
   {
@@ -112,7 +112,7 @@ const posts : Post[] =  [
     title: "5 plats traditionnels incontournables du Burkina Faso",
     summary: "Zoom sur les mets les plus appréciés du pays des Hommes intègres.",
     content: "Du tô au riz gras en passant par le babenda, voici un tour culinaire...",
-    image: "https://picsum.photos/200/300",
+    image: "https://picsum.photos/200/300?random=2",
     category: "Culture",
     tags: ["gastronomie", "culture", "Burkina Faso"],
     publishedAt: "2025-06-28T10:30:00Z",
@@ -128,7 +128,7 @@ const posts : Post[] =  [
     title: "L’agriculture face au changement climatique",
     summary: "Les agriculteurs s’adaptent face aux défis environnementaux.",
     content: "Le changement climatique affecte les cycles agricoles...",
-    image: "https://example.com/images/agriculture.jpg",
+    image: "https://picsum.photos/200/300?random=3",
     category: "Environnement",
     tags: ["agriculture", "climat", "développement durable"],
     publishedAt: "2025-06-25T14:45:00Z",
@@ -137,7 +137,7 @@ const posts : Post[] =  [
     author: {
       id: "U003",
       name: "Issouf Traoré",
-      avatar: "https://example.com/avatars/issouf.jpg"
+      avatar: "https://picsum.photos/200/300"
     }
   },
   {
@@ -145,7 +145,7 @@ const posts : Post[] =  [
     title: "Startup burkinabè : un nouvel écosystème en pleine croissance",
     summary: "Les jeunes innovent et créent des entreprises dans la tech.",
     content: "L'entrepreneuriat numérique séduit de plus en plus de jeunes diplômés...",
-    image: "https://example.com/images/startup.jpg",
+    image: "https://picsum.photos/200/300?random=4",
     category: "Économie",
     tags: ["entrepreneuriat", "innovation", "startups"],
     publishedAt: "2025-07-02T09:00:00Z",
@@ -161,7 +161,7 @@ const posts : Post[] =  [
     title: "Tourisme local : 7 destinations à découvrir au Burkina",
     summary: "Le Burkina regorge de sites naturels et historiques à visiter.",
     content: "Des pics de Sindou aux ruines de Loropéni, partez à l’aventure...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=5",
     category: "Tourisme",
     tags: ["voyage", "tourisme", "Burkina Faso"],
     publishedAt: "2025-06-20T16:00:00Z",
@@ -170,7 +170,7 @@ const posts : Post[] =  [
     author: {
       id: "U005",
       name: "Salif Ouattara",
-      avatar: "https://example.com/avatars/salif.jpg"
+      avatar: "https://picsum.photos/200/300"
     }
   },
   {
@@ -178,7 +178,7 @@ const posts : Post[] =  [
     title: "L’évolution du cinéma africain : focus sur le FESPACO",
     summary: "Le FESPACO met en lumière le talent des cinéastes africains.",
     content: "Créé en 1969, ce festival est devenu un rendez-vous incontournable...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=6",
     category: "Culture",
     tags: ["cinéma", "FESPACO", "Afrique"],
     publishedAt: "2025-07-01T11:15:00Z",
@@ -194,7 +194,7 @@ const posts : Post[] =  [
     title: "Comment protéger sa vie privée en ligne ?",
     summary: "Quelques bonnes pratiques pour sécuriser vos données personnelles.",
     content: "Avec la montée des cyberattaques, il est crucial de protéger ses données...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=7",
     category: "Technologie",
     tags: ["sécurité", "vie privée", "numérique"],
     publishedAt: "2025-07-03T13:30:00Z",
@@ -203,7 +203,7 @@ const posts : Post[] =  [
     author: {
       id: "U007",
       name: "Brice Sanou",
-      avatar: "https://example.com/avatars/brice.jpg"
+      avatar: "https://picsum.photos/200/300"
     }
   },
   {
@@ -211,7 +211,7 @@ const posts : Post[] =  [
     title: "Les femmes dans la science au Burkina Faso",
     summary: "Un regard sur celles qui font avancer la recherche scientifique.",
     content: "De plus en plus de femmes burkinabè s’imposent dans les laboratoires...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=8",
     category: "Société",
     tags: ["science", "femmes", "Burkina Faso"],
     publishedAt: "2025-06-27T07:45:00Z",
@@ -227,7 +227,7 @@ const posts : Post[] =  [
     title: "La musique traditionnelle à l’ère du numérique",
     summary: "Les artistes traditionnels adoptent les plateformes digitales.",
     content: "De nombreux musiciens intègrent le digital pour mieux diffuser leur art...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=9",
     category: "Culture",
     tags: ["musique", "tradition", "numérique"],
     publishedAt: "2025-06-26T17:00:00Z",
@@ -243,7 +243,7 @@ const posts : Post[] =  [
     title: "L’accès à l’eau potable en milieu rural",
     summary: "Des projets communautaires pour améliorer la situation.",
     content: "Grâce aux forages et aux mini-adductions d’eau potable, des progrès notables sont visibles...",
-    image: "https://images.pexels.com/lib/api/pexels-white.png",
+    image: "https://picsum.photos/200/300?random=10",
     category: "Santé",
     tags: ["eau", "rural", "santé publique"],
     publishedAt: "2025-07-02T06:30:00Z",
@@ -252,7 +252,7 @@ const posts : Post[] =  [
     author: {
       id: "U010",
       name: "Zakaria Yaméogo",
-      avatar: "https://example.com/avatars/zakaria.jpg"
+      avatar: "https://picsum.photos/200/300"
     }
   }
 ];

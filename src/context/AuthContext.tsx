@@ -5,6 +5,8 @@ import AuthService from '../services/auth/AuthService';
 export interface User {
   name: string;
   email: string;
+  avatar?: string;
+  phone?: string;
   // Ajoute d'autres champs si besoin
 }
 

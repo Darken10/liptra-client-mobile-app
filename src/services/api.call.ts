@@ -207,7 +207,7 @@ export const ArticlesService = {
 };
 
 export const NotificationsService = {
-  getNotifications: async () => {
+  getNotifications: async (p0: { page: number; per_page: number; }) => {
     /* return api.get('/notifications'); */
     return JSON.parse(`
       {

@@ -1,0 +1,43 @@
+[
+    {
+      "id": "notif1",
+      "title": "Votre voyage approche",
+      "message": "Votre voyage Paris - Lyon est prévu demain à 8h30. N'oubliez pas vos documents de voyage !",
+      "type": "info",
+      "read": false,
+      "createdAt": "2025-07-14T10:00:00Z"
+    },
+    {
+      "id": "notif2",
+      "title": "Réduction spéciale",
+      "message": "Profitez de 20% de réduction sur votre prochain voyage en réservant avant le 30 juin.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2025-06-15T14:30:00Z"
+    },
+    {
+      "id": "notif3",
+      "title": "Retard de train",
+      "message": "Votre train Marseille - Nice du 16 juillet aura un retard estimé de 15 minutes.",
+      "type": "warning",
+      "read": false,
+      "createdAt": "2025-07-16T08:00:00Z"
+    },
+    {
+      "id": "notif4",
+      "title": "Ticket transféré",
+      "message": "Votre ticket pour le voyage Lyon - Bordeaux a été transféré avec succès à Pierre Bernard.",
+      "type": "info",
+      "read": true,
+      "createdAt": "2025-06-02T16:45:00Z"
+    },
+    {
+      "id": "notif5",
+      "title": "Annulation de voyage",
+      "message": "Votre voyage Paris - Nantes du 25 juillet a été annulé. Contactez le service client pour plus d'informations.",
+      "type": "error",
+      "read": false,
+      "createdAt": "2025-07-10T09:15:00Z"
+    }
+  ]
+  

@@ -1,6 +1,8 @@
-import { Button, Spacer, Text } from '@/src/components/natiui';
+import ProfilePage from '@/src/components/pages/profile/profilePage';
+import PageHeader from '@/src/components/shared/header';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { View } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../../../src/context/AuthContext';
 
 export default function ProfileScreen() {
@@ -9,18 +11,64 @@ export default function ProfileScreen() {
 
   if (!user) return null;
 
+    const handleLogout = () => {
+      Alert.alert(
+        'Déconnexion',
+        'Êtes-vous sûr de vouloir vous déconnecter ?',
+        [
+          { text: 'Annuler', style: 'cancel' },
+          { 
+            text: 'Déconnecter', 
+            style: 'destructive',
+            onPress: () => {
+              logout();
+              router.replace('/auth/login');
+            }
+          }
+        ]
+      );
+    };
+  
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <Text variant="h4">Profil</Text>
-      <Spacer size={16} />
-      <Text variant="body1">Nom : {user.name}</Text>
-      <Text variant="body1">Email : {user.email}</Text>
-      <Spacer size={24} />
-      <Button onPress={() => router.push('/(tabs)/profile/edit')} variant="outlined">Éditer le profil</Button>
-      <Spacer size={8} />
-      <Button onPress={() => router.push('/(tabs)/profile/change-password')} variant="outlined">Changer le mot de passe</Button>
-      <Spacer size={16} />
-      <Button onPress={logout} variant="filled" >Se déconnecter</Button>
+    <View style={{ flex: 1 }}>
+      <PageHeader 
+        title="Profil" 
+        onBack={() => router.back()} 
+        startActions = {
+          <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        }
+        endActions = {
+          <TouchableOpacity 
+          style={styles.markAllButton}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={24} color="#fff" />
+        </TouchableOpacity>
+        }
+        
+      />
+      <ProfilePage handleLogout={handleLogout}/>
     </View>
   );
 } 
+
+const styles = StyleSheet.create({
+  backButton: {
+    padding: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markAllButton: {
+    padding: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
