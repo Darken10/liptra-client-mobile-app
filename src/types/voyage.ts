@@ -4,11 +4,13 @@ export interface Voyage {
       city: string;
       station: string;
       time: string;
+      country?: string;
     };
     arrival: {
       city: string;
       station: string;
       time: string;
+      country?: string;
     };
     company: string;
     price: number;

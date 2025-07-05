@@ -1,110 +1,77 @@
 [
   {
-    "id": "trip1",
+    "id": "BF101",
     "departure": {
-      "city": "Paris",
-      "station": "Gare de Lyon",
-      "time": "2025-07-15T08:30:00Z"
+      "city": "Ouagadougou",
+      "station": "Gare TSR Ouaga 2000",
+      "time": "2025-07-04T07:00:00Z"
     },
     "arrival": {
-      "city": "Lyon",
-      "station": "Gare Part-Dieu",
-      "time": "2025-07-15T10:30:00Z"
+      "city": "Bobo-Dioulasso",
+      "station": "Gare Routière Bobo Accart-ville",
+      "time": "2025-07-04T12:30:00Z"
     },
-    "company": "SNCF",
-    "price": 45.99,
-    "duration": "2h00",
-    "availableSeats": 78,
-    "vehicleType": "train"
+    "company": "TSR",
+    "price": 8000,
+    "duration": "5h30",
+    "availableSeats": 6,
+    "vehicleType": "bus",
+    "popularity": 88
   },
   {
-    "id": "trip2",
+    "id": "BF102",
     "departure": {
-      "city": "Marseille",
-      "station": "Gare Saint-Charles",
-      "time": "2025-07-16T09:15:00Z"
+      "city": "Ouagadougou",
+      "station": "Gare STAF Zone 1",
+      "time": "2025-07-05T08:30:00Z"
     },
     "arrival": {
-      "city": "Nice",
-      "station": "Gare de Nice-Ville",
-      "time": "2025-07-16T11:45:00Z"
+      "city": "Koudougou",
+      "station": "Gare Koudougou Centre",
+      "time": "2025-07-05T11:00:00Z"
     },
-    "company": "SNCF",
-    "price": 32.50,
+    "company": "STAF",
+    "price": 3500,
     "duration": "2h30",
-    "availableSeats": 45,
-    "vehicleType": "train"
-  },
-  {
-    "id": "trip3",
-    "departure": {
-      "city": "Lyon",
-      "station": "Gare Part-Dieu",
-      "time": "2025-07-17T14:00:00Z"
-    },
-    "arrival": {
-      "city": "Bordeaux",
-      "station": "Gare Saint-Jean",
-      "time": "2025-07-17T18:15:00Z"
-    },
-    "company": "SNCF",
-    "price": 68.75,
-    "duration": "4h15",
-    "availableSeats": 23,
-    "vehicleType": "train"
-  },
-  {
-    "id": "trip4",
-    "departure": {
-      "city": "Paris",
-      "station": "Bercy Seine",
-      "time": "2025-07-18T07:30:00Z"
-    },
-    "arrival": {
-      "city": "Lyon",
-      "station": "Perrache",
-      "time": "2025-07-18T13:30:00Z"
-    },
-    "company": "FlixBus",
-    "price": 19.99,
-    "duration": "6h00",
-    "availableSeats": 12,
+    "availableSeats": 14,
     "vehicleType": "bus"
   },
   {
-    "id": "trip5",
+    "id": "BF103",
     "departure": {
-      "city": "Nantes",
-      "station": "Gare Routière",
-      "time": "2025-07-19T10:00:00Z"
+      "city": "Ouagadougou",
+      "station": "Rahimo Transport, Patte d'oie",
+      "time": "2025-07-06T14:00:00Z"
     },
     "arrival": {
-      "city": "Rennes",
-      "station": "Gare Routière",
-      "time": "2025-07-19T12:00:00Z"
+      "city": "Fada N'Gourma",
+      "station": "Station routière Fada",
+      "time": "2025-07-06T18:00:00Z"
     },
-    "company": "BlaBlaCar Bus",
-    "price": 15.50,
-    "duration": "2h00",
-    "availableSeats": 8,
-    "vehicleType": "bus"
+    "company": "Rahimo Transport",
+    "price": 6000,
+    "duration": "4h00",
+    "availableSeats": 10,
+    "vehicleType": "bus",
+    "popularity": 60
   },
   {
-    "id": "trip6",
+    "id": "BF104",
     "departure": {
-      "city": "Toulon",
-      "station": "Port de Toulon",
-      "time": "2025-07-20T08:00:00Z"
+      "city": "Bobo-Dioulasso",
+      "station": "STAF Bobo, secteur 21",
+      "time": "2025-07-07T09:30:00Z"
     },
     "arrival": {
-      "city": "Ajaccio",
-      "station": "Port d'Ajaccio",
-      "time": "2025-07-20T14:00:00Z"
+      "city": "Banfora",
+      "station": "Station Banfora Centre",
+      "time": "2025-07-07T11:45:00Z"
     },
-    "company": "Corsica Ferries",
-    "price": 49.99,
-    "duration": "6h00",
-    "availableSeats": 120,
-    "vehicleType": "ferry"
+    "company": "STAF",
+    "price": 2500,
+    "duration": "2h15",
+    "availableSeats": 0,
+    "vehicleType": "bus",
+    "popularity": 72
   }
 ]

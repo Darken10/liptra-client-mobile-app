@@ -1,0 +1,294 @@
+[
+  {
+    "id": "A001",
+    "title": "L'impact du numérique sur l'éducation au Burkina Faso",
+    "summary": "Le numérique transforme progressivement le système éducatif burkinabè.",
+    "content": "Avec l’essor des technologies, de nombreuses écoles adoptent des outils numériques...",
+    "image": "https://picsum.photos/200/300?random=1",
+    "category": "Éducation",
+    "tags": ["éducation", "numérique", "Burkina Faso"],
+    "publishedAt": "2025-07-01T08:00:00Z",
+    "likes": 124,
+    "comments": [
+      {
+        "id": "C001",
+        "content": "Très intéressant ! Le numérique a un vrai potentiel pour transformer l'éducation ici.",
+        "author": {
+          "id": "U011",
+          "name": "Soma Ouedraogo",
+          "avatar": "https://picsum.photos/200/300"
+        }
+      }
+    ],
+    "author": {
+      "id": "U001",
+      "name": "Aïcha Ouédraogo",
+      "avatar": "https://picsum.photos/200/300"
+    }
+  },
+  {
+    "id": "A002",
+    "title": "5 plats traditionnels incontournables du Burkina Faso",
+    "summary": "Zoom sur les mets les plus appréciés du pays des Hommes intègres.",
+    "content": "Du tô au riz gras en passant par le babenda, voici un tour culinaire...",
+    "image": "https://picsum.photos/200/300?random=2",
+    "category": "Culture",
+    "tags": ["gastronomie", "culture", "Burkina Faso"],
+    "publishedAt": "2025-06-28T10:30:00Z",
+    "likes": 230,
+    "comments": [
+      {
+        "id": "C002",
+        "content": "Le tô reste mon plat préféré, c’est vraiment un plat incontournable au Burkina!",
+        "author": {
+          "id": "U012",
+          "name": "Mariam Zongo"
+        }
+      },
+      {
+        "id": "C003",
+        "content": "J'adore aussi le riz gras, mais j’aimerais en savoir plus sur la préparation.",
+        "author": {
+          "id": "U013",
+          "name": "Abdoul Ouédraogo"
+        }
+      }
+    ],
+    "author": {
+      "id": "U002",
+      "name": "Moussa Kaboré"
+    }
+  },
+  {
+    "id": "A003",
+    "title": "L’agriculture face au changement climatique",
+    "summary": "Les agriculteurs s’adaptent face aux défis environnementaux.",
+    "content": "Le changement climatique affecte les cycles agricoles...",
+    "image": "https://picsum.photos/200/300?random=3",
+    "category": "Environnement",
+    "tags": ["agriculture", "climat", "développement durable"],
+    "publishedAt": "2025-06-25T14:45:00Z",
+    "likes": 89,
+    "comments": [
+      {
+        "id": "C004",
+        "content": "L’agriculture durable est essentielle pour l’avenir du Burkina. Il faut soutenir les agriculteurs!",
+        "author": {
+          "id": "U014",
+          "name": "Binta Koné",
+          "avatar": "https://picsum.photos/200/300"
+        }
+      },
+      {
+        "id": "C005",
+        "content": "Les pratiques agricoles modernes sont une solution pour atténuer les effets du changement climatique.",
+        "author": {
+          "id": "U015",
+          "name": "Issa Traoré"
+        }
+      },
+      {
+        "id": "C006",
+        "content": "Que proposez-vous comme alternatives pour les agriculteurs qui ne peuvent pas adopter ces nouvelles pratiques?",
+        "author": {
+          "id": "U016",
+          "name": "Salimata Ouédraogo"
+        }
+      },
+      {
+        "id": "C007",
+        "content": "C’est un sujet crucial, j'espère que des solutions concrètes seront mises en place.",
+        "author": {
+          "id": "U017",
+          "name": "Amadou Kaboré"
+        }
+      },
+      {
+        "id": "C008",
+        "content": "Le Burkina doit investir dans la recherche agricole pour mieux répondre au climat.",
+        "author": {
+          "id": "U018",
+          "name": "Kadiatou Sidibé"
+        }
+      },
+      {
+        "id": "C009",
+        "content": "Je suis d'accord, il faut vraiment réagir maintenant avant qu’il ne soit trop tard.",
+        "author": {
+          "id": "U019",
+          "name": "Moussa Diabaté"
+        }
+      },
+      {
+        "id": "C010",
+        "content": "Le soutien de l’Etat et des ONG est primordial pour faire face aux conséquences du changement climatique.",
+        "author": {
+          "id": "U020",
+          "name": "Fatoumata Traoré"
+        }
+      },
+      {
+        "id": "C011",
+        "content": "Est-ce qu'il y a des programmes pour sensibiliser les jeunes agriculteurs à ces enjeux?",
+        "author": {
+          "id": "U021",
+          "name": "Tiemoko Soro"
+        }
+      },
+      {
+        "id": "C012",
+        "content": "Le sujet mérite plus d'attention, surtout pour les prochaines générations.",
+        "author": {
+          "id": "U022",
+          "name": "Seydou Ouattara"
+        }
+      },
+      {
+        "id": "C013",
+        "content": "Il faut aussi inclure des techniques de gestion de l'eau dans ces pratiques agricoles.",
+        "author": {
+          "id": "U023",
+          "name": "Cissé Tiam"
+        }
+      }
+    ],
+    "author": {
+      "id": "U003",
+      "name": "Issouf Traoré",
+      "avatar": "https://picsum.photos/200/300"
+    }
+  },
+  {
+    "id": "A004",
+    "title": "Startup burkinabè : un nouvel écosystème en pleine croissance",
+    "summary": "Les jeunes innovent et créent des entreprises dans la tech.",
+    "content": "L'entrepreneuriat numérique séduit de plus en plus de jeunes diplômés...",
+    "image": "https://picsum.photos/200/300?random=4",
+    "category": "Économie",
+    "tags": ["entrepreneuriat", "innovation", "startups"],
+    "publishedAt": "2025-07-02T09:00:00Z",
+    "likes": 164,
+    "comments": [
+      {
+        "id": "C014",
+        "content": "Les jeunes entrepreneurs doivent être soutenus pour réussir dans ce domaine!",
+        "author": {
+          "id": "U024",
+          "name": "Mariama Kaboré"
+        }
+      }
+    ],
+    "author": {
+      "id": "U004",
+      "name": "Fatoumata Zongo"
+    }
+  },
+  {
+    "id": "A005",
+    "title": "Tourisme local : 7 destinations à découvrir au Burkina",
+    "summary": "Le Burkina regorge de sites naturels et historiques à visiter.",
+    "content": "Des pics de Sindou aux ruines de Loropéni, partez à l’aventure...",
+    "image": "https://picsum.photos/200/300?random=5",
+    "category": "Tourisme",
+    "tags": ["voyage", "tourisme", "Burkina Faso"],
+    "publishedAt": "2025-06-20T16:00:00Z",
+    "likes": 200,
+    "comments": [],
+    "author": {
+      "id": "U005",
+      "name": "Salif Ouattara",
+      "avatar": "https://picsum.photos/200/300"
+    }
+  },
+  {
+    "id": "A006",
+    "title": "L’évolution du cinéma africain : focus sur le FESPACO",
+    "summary": "Le FESPACO met en lumière le talent des cinéastes africains.",
+    "content": "Créé en 1969, ce festival est devenu un rendez-vous incontournable...",
+    "image": "https://picsum.photos/200/300?random=6",
+    "category": "Culture",
+    "tags": ["cinéma", "FESPACO", "Afrique"],
+    "publishedAt": "2025-07-01T11:15:00Z",
+    "likes": 310,
+    "comments": [
+      {
+        "id": "C015",
+        "content": "Le FESPACO est une belle vitrine pour la culture cinématographique africaine.",
+        "author": {
+          "id": "U025",
+          "name": "Adama Sango"
+        }
+      }
+    ],
+    "author": {
+      "id": "U006",
+      "name": "Nadine Kiemtoré"
+    }
+  },
+  {
+    "id": "A007",
+    "title": "Comment protéger sa vie privée en ligne ?",
+    "summary": "Quelques bonnes pratiques pour sécuriser vos données personnelles.",
+    "content": "Avec la montée des cyberattaques, il est crucial de protéger ses données...",
+    "image": "https://picsum.photos/200/300?random=7",
+    "category": "Technologie",
+    "tags": ["sécurité", "vie privée", "numérique"],
+    "publishedAt": "2025-07-03T13:30:00Z",
+    "likes": 140,
+    "comments": [],
+    "author": {
+      "id": "U007",
+      "name": "Brice Sanou",
+      "avatar": "https://picsum.photos/200/300"
+    }
+  },
+  {
+    "id": "A008",
+    "title": "Les femmes dans la science au Burkina Faso",
+    "summary": "Un regard sur celles qui font avancer la recherche scientifique.",
+    "content": "De plus en plus de femmes burkinabè s’imposent dans les laboratoires...",
+    "image": "https://picsum.photos/200/300?random=8",
+    "category": "Société",
+    "tags": ["science", "femmes", "Burkina Faso"],
+    "publishedAt": "2025-06-27T07:45:00Z",
+    "likes": 176,
+    "comments": [],
+    "author": {
+      "id": "U008",
+      "name": "Clarisse Sawadogo"
+    }
+  },
+  {
+    "id": "A009",
+    "title": "La musique traditionnelle à l’ère du numérique",
+    "summary": "Les artistes traditionnels adoptent les plateformes digitales.",
+    "content": "De nombreux musiciens intègrent le digital pour mieux diffuser leur art...",
+    "image": "https://picsum.photos/200/300?random=9",
+    "category": "Culture",
+    "tags": ["musique", "tradition", "numérique"],
+    "publishedAt": "2025-06-26T17:00:00Z",
+    "likes": 98,
+    "comments": [],
+    "author": {
+      "id": "U009",
+      "name": "Abdoulaye Nana"
+    }
+  },
+  {
+    "id": "A010",
+    "title": "L’accès à l’eau potable en milieu rural",
+    "summary": "Des projets communautaires pour améliorer la situation.",
+    "content": "Grâce aux forages et aux mini-adductions d’eau potable, des progrès notables sont visibles...",
+    "image": "https://picsum.photos/200/300?random=10",
+    "category": "Santé",
+    "tags": ["eau", "rural", "santé publique"],
+    "publishedAt": "2025-07-02T06:30:00Z",
+    "likes": 110,
+    "comments": [],
+    "author": {
+      "id": "U010",
+      "name": "Zakaria Yaméogo",
+      "avatar": "https://picsum.photos/200/300"
+    }
+  }
+]

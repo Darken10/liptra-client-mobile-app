@@ -9,7 +9,17 @@ export interface Post {
     tags: string[];
     publishedAt: string;
     likes: number;
-    comments: number;
+    author: {
+      id: string;
+      name: string;
+      avatar?: string;
+    };
+    comments: Comment[];
+  }
+
+  export interface Comment {
+    id: string;
+    content: string;
     author: {
       id: string;
       name: string;

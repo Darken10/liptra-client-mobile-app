@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Modal,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   Animated,
-  PanResponder,
   Dimensions,
-  ViewStyle,
-  TextStyle,
+  Modal,
+  PanResponder,
+  StyleSheet,
   Text,
+  TextStyle,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle
 } from 'react-native';
 import { useTheme } from '../../theme';
 

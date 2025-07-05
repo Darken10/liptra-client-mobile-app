@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import AuthService from '../services/auth/AuthService';
 
 export interface User {
+  id?: string;
   name: string;
   email: string;
   avatar?: string;

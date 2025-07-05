@@ -1,8 +1,9 @@
-import { Text, View } from 'react-native';
+import SearchPage from '@/src/components/pages/voyage/searchPage';
+import { router } from 'expo-router';
+
 export default function TravelScreen() {
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Voyage</Text>
-    </View>
+    <SearchPage goBack={() => router.back()}/>
   );
 } 

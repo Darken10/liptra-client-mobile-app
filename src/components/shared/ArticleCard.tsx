@@ -1,3 +1,4 @@
+import CustumAvatar from '@/src/components/shared/CustumAvatar';
 import { Post } from '@/src/types';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
@@ -27,8 +28,6 @@ const ArticleCard = ({ article, onPress }: ArticleCardProps) => {
     } 
   };
 
-
-  console.log(article.image);
   
   return (
     <TouchableOpacity 
@@ -58,18 +57,7 @@ const ArticleCard = ({ article, onPress }: ArticleCardProps) => {
         
         <View style={styles.footer}>
           <View style={styles.authorContainer}>
-            {article.author.avatar ? (
-              <Image 
-                source={{ uri: article.author.avatar }} 
-                style={styles.authorAvatar}
-              />
-            ) : (
-              <View style={[styles.authorAvatar, styles.authorAvatarPlaceholder]}>
-                <Text style={styles.authorAvatarText}>
-                  {article.author.name.charAt(0)}
-                </Text>
-              </View>
-            )}
+            <CustumAvatar source={article.author.avatar || ""} size="md" name={article.author.name} />
             <View>
               <Text style={styles.authorName}>{article.author.name}</Text>
               <Text style={styles.publishDate}>{formatDate(article.publishedAt)}</Text>
@@ -83,7 +71,7 @@ const ArticleCard = ({ article, onPress }: ArticleCardProps) => {
             </View>
             <View style={styles.statItem}>
               <Ionicons name="chatbubble-outline" size={16} color="#6B7280" />
-              <Text style={styles.statText}>{article.comments}</Text>
+              <Text style={styles.statText}>{article.comments.length || 0}</Text>
             </View>
           </View>
         </View>
