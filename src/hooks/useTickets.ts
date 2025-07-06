@@ -4,6 +4,7 @@ import tripsData from '@/src/data/trips.json';
 import { useNotificationService } from '@/src/services/notifications/NotificationService';
 import { Ticket, TicketStatus } from '@/src/types';
 import { useEffect, useState } from 'react';
+import TicketService from '../services/TicketService';
 
 // Hook pour gérer les tickets
 const useTickets = () => {
@@ -18,146 +19,8 @@ const useTickets = () => {
       try {
         setIsLoading(true);
         
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
         // Créer des tickets codés en dur pour les tests
-        const hardcodedTickets: Ticket[] = [
-          {
-            id: "ticket1",
-            tripId: "trip1",
-            userId: "user1",
-            passengerName: "Issa Sawadogo",
-            seatNumber: "12",
-            purchaseDate: "2025-06-10T15:30:00Z",
-            travelDate: "2025-07-15T08:00:00Z",
-            qrCode: "BF-TRANSPORT-TICKET-1234567890",
-            status: "valid",
-            trip: {
-              departure: {
-                city: "Ouagadougou",
-                station: "Gare de Ouaga Inter",
-                time: "2025-07-15T08:00:00Z"
-              },
-              arrival: {
-                city: "Bobo-Dioulasso",
-                station: "Gare de Bobo Centre",
-                time: "2025-07-15T14:00:00Z"
-              },
-              company: "STAF",
-              vehicleType: "bus",
-              duration: "6h00"
-            }
-          },
-          {
-            id: "ticket2",
-            tripId: "trip2",
-            userId: "user1",
-            passengerName: "Issa Sawadogo",
-            seatNumber: "05",
-            purchaseDate: "2025-06-12T09:45:00Z",
-            travelDate: "2025-07-16T06:30:00Z",
-            qrCode: "BF-TRANSPORT-TICKET-0987654321",
-            status: "upcoming",
-            trip: {
-              departure: {
-                city: "Koudougou",
-                station: "Gare de Koudougou Nord",
-                time: "2025-07-16T06:30:00Z"
-              },
-              arrival: {
-                city: "Ouagadougou",
-                station: "Gare de Ouaga Inter",
-                time: "2025-07-16T09:00:00Z"
-              },
-              company: "TSR",
-              vehicleType: "bus",
-              duration: "2h30"
-            }
-          },
-          {
-            id: "ticket3",
-            tripId: "trip3",
-            userId: "user1",
-            passengerName: "Issa Sawadogo",
-            seatNumber: "14",
-            purchaseDate: "2025-05-20T14:30:00Z",
-            travelDate: "2025-06-05T10:00:00Z",
-            qrCode: "BF-TRANSPORT-TICKET-5678901234",
-            status: "used",
-            trip: {
-              departure: {
-                city: "Ouagadougou",
-                station: "Gare de Ouaga Inter",
-                time: "2025-06-05T10:00:00Z"
-              },
-              arrival: {
-                city: "Fada N’Gourma",
-                station: "Gare Routière Centrale",
-                time: "2025-06-05T14:00:00Z"
-              },
-              company: "RAK Transport",
-              vehicleType: "bus",
-              duration: "4h00"
-            }
-          },
-          {
-            id: "ticket4",
-            tripId: "trip4",
-            userId: "user1",
-            passengerName: "Issa Sawadogo",
-            seatNumber: "22",
-            purchaseDate: "2025-06-01T11:15:00Z",
-            travelDate: "2025-06-18T14:45:00Z",
-            qrCode: "BF-TRANSPORT-TICKET-1357924680",
-            status: "cancelled",
-            trip: {
-              departure: {
-                city: "Banfora",
-                station: "Gare Banfora Ville",
-                time: "2025-06-18T14:45:00Z"
-              },
-              arrival: {
-                city: "Bobo-Dioulasso",
-                station: "Gare de Bobo Centre",
-                time: "2025-06-18T17:00:00Z"
-              },
-              company: "STAF",
-              vehicleType: "bus",
-              duration: "2h15"
-            }
-          },
-          {
-            id: "ticket5",
-            tripId: "trip5",
-            userId: "user1",
-            passengerName: "Issa Sawadogo",
-            seatNumber: "08, 09",
-            purchaseDate: "2025-06-15T16:20:00Z",
-            travelDate: "2025-06-20T05:30:00Z",
-            qrCode: "BF-TRANSPORT-TICKET-2468013579",
-            status: "past",
-            trip: {
-              departure: {
-                city: "Ouahigouya",
-                station: "Gare Ouahigouya",
-                time: "2025-06-20T05:30:00Z"
-              },
-              arrival: {
-                city: "Ouagadougou",
-                station: "Gare de Ouaga Inter",
-                time: "2025-06-20T09:00:00Z"
-              },
-              company: "TSR",
-              vehicleType: "bus",
-              duration: "3h30"
-            }
-          }
-        ];
-        
-        
-        // Afficher les tickets dans la console pour débogage
-        console.log('Tickets codés en dur:', hardcodedTickets.length);
+        const hardcodedTickets: Ticket[] = await TicketService.getAllTickets();
         
         // Mettre à jour les statuts des tickets en fonction de la date actuelle
         const updatedTickets = hardcodedTickets.map(ticket => {
@@ -238,10 +101,7 @@ const useTickets = () => {
   const transferTicket = async (ticketId: string, recipientId: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Find the ticket to transfer
       const ticketIndex = tickets.findIndex(t => t.id === ticketId);
       
@@ -357,6 +217,25 @@ const useTickets = () => {
     }
   };
 
+  const reloadTickets = async () => {
+    // Créer des tickets codés en dur pour les tests
+    const hardcodedTickets: Ticket[] = await TicketService.getAllTickets();
+    
+    // Mettre à jour les statuts des tickets en fonction de la date actuelle
+    const updatedTickets = hardcodedTickets.map(ticket => {
+      if (isTicketExpired(ticket) && ticket.status === 'valid') {
+        return { ...ticket, status: 'past' as TicketStatus };
+      }
+      return ticket;
+    });
+    
+    setTickets(updatedTickets);
+    
+    // Vérifier les tickets à venir et générer des notifications de rappel
+    checkUpcomingTrips(updatedTickets);
+  };
+  
+
   return {
     tickets,
     isLoading,
@@ -364,7 +243,8 @@ const useTickets = () => {
     getTicketById,
     transferTicket,
     createTicket,
-    cancelTicket
+    cancelTicket,
+    reloadTickets
   };
 };
 

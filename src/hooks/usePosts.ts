@@ -1,5 +1,5 @@
-import articlesData from '@/src/data/articles.json';
 import { useEffect, useState } from 'react';
+import PostService from '../services/posts/PostService';
 import { Post } from '../types';
 
 const useArticles = () => {
@@ -8,25 +8,24 @@ const useArticles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
+  const [recentPosts, setRecentPosts] = useState<Post[]>([]);
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      const articlesData = await PostService.getAllPosts();
       // Extract unique categories and tags
-      const allCategories = [...new Set(articlesData.map(article => article.category))];
+      const allCategories = [...new Set(articlesData.data.map(article => article.category))];
       
       const allTags = [...new Set(
-        articlesData.flatMap(article => article.tags)
+        articlesData.data.flatMap(article => article.tags)
       )];
       
-      setPosts(articlesData);
-      setFilteredPosts(articlesData);
+      setPosts(articlesData.data);
+      setFilteredPosts(articlesData.data);
       setCategories(allCategories);
-      setTags(allTags);
+      setTags(allTags)
+      setRecentPosts(articlesData.data.slice(0, 5));
     } catch (error) {
       console.error('Error fetching articles:', error);
     } finally {
@@ -60,7 +59,9 @@ const useArticles = () => {
   };
 
   const getPostById = (id: string): Post | undefined => {
-    return posts.find(post => post.id === id);
+    return posts.find(post => {
+      return post.id == id;
+    });
   };
 
   const likePost = (id: string) => {
@@ -93,6 +94,7 @@ const useArticles = () => {
   return {
     posts: filteredPosts,
     allPosts: posts,
+    recentPosts,
     categories,
     tags,
     isLoading,

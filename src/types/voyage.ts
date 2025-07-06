@@ -14,9 +14,11 @@ export interface Voyage {
     };
     company: string;
     price: number;
+    aller_retour_price: number;
+    aller_simple_price: number;
     duration: string;
     availableSeats: number;
     vehicleType: 'bus' | 'train' | 'ferry';
     popularity?: number; // Ajout de la propriété popularity optionnelle
-  }
+}
   

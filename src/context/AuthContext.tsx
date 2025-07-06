@@ -1,20 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AUTH_TOKEN_KEY } from '../constants/app';
 import AuthService from '../services/auth/AuthService';
+import { User } from '../types/auth';
 
-export interface User {
-  id?: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  phone?: string;
-  // Ajoute d'autres champs si besoin
-}
 
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -31,30 +25,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const loadUser = async () => {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
       if (token) {
-        const profile = await AuthService.showProfile(token) as User;
-        setUser(profile);
+        try{
+          const profile = await AuthService.showProfile() as User;
+          setUser(profile);
+        }catch(error : any){
+          if (error.response?.status === 401) {
+            console.log('Non autorisé - Token invalide ou expiré');
+            await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+            setUser(null);
+          }
+          console.log(error);
+          setUser(null);
+        }
       }
       setLoading(false);
     };
     loadUser();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string) : Promise<boolean> => {
     const { token, user } = await AuthService.login(email, password) as { token: string; user: User };
-    await AsyncStorage.setItem('token', token);
+    await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
     setUser(user);
+    return true;
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
     setUser(null);
   };
 
   const register = async (data: { name: string; email: string; password: string }) => {
     const { token, user } = await AuthService.register(data) as { token: string; user: User };
-    await AsyncStorage.setItem('token', token);
+    await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
     setUser(user);
   };
 
@@ -72,9 +77,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const showProfile = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
     if (token) {
-      const profile = await AuthService.showProfile(token) as User;
+      const profile = await AuthService.showProfile() as User;
       setUser(profile);
     }
   };

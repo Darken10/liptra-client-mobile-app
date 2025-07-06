@@ -15,29 +15,19 @@ import {
 } from 'react-native';
 
 export default function TicketsListPage() {
-  const { tickets, getTicketsByStatus } = useTickets();
+  const { tickets, getTicketsByStatus,isLoading,reloadTickets } = useTickets();
   const [activeTab, setActiveTab] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   
   // Définir tous les hooks au début du composant
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     // In a real app, we would fetch fresh data here
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+    await reloadTickets();
+    setRefreshing(false);
+    
   }, []);
   
-  // Simuler un temps de chargement pour démontrer le loader
-  React.useEffect(() => {
-    // Dans une vraie application, ce délai serait remplacé par le temps réel de chargement des données
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
-  }, []);
   
   // Logs de débogage
   console.log('Tickets disponibles:', tickets);

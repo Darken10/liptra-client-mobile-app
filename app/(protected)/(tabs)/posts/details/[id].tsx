@@ -2,6 +2,7 @@ import { BottomSheet } from '@/src/components/natiui';
 import LoadingScreen from '@/src/components/pages/LoadingScreen';
 import CustumAvatar from '@/src/components/shared/CustumAvatar';
 import CommentSection from '@/src/components/shared/posts/CommentSection';
+import { API_BASE_URL } from '@/src/constants/app';
 import usePosts from '@/src/hooks/usePosts';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
@@ -27,6 +28,7 @@ export default function ArticleDetailScreen() {
 
   // Get article details using the ID from URL params
   const article = getPostById(id as string);
+  console.log(id);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -68,7 +70,9 @@ export default function ArticleDetailScreen() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `${article.title} - Découvrez cet article sur e-Liptra: ${article.title}`,
+        message: `Découvrez cet article sur e-Liptra: ${article.title}
+        
+        ${API_BASE_URL}/article/${article.id}`,
         title: article.title,
       });
     } catch (error) {

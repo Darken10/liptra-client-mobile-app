@@ -8,22 +8,20 @@ import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-    FlatList,
-    Image,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  FlatList,
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function ArticlesScreen() {
-  const { posts, fetchPosts } = usePosts();
+  const { posts, fetchPosts, categories } = usePosts();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Tous');
-  
-  const categories = ['Tous', 'Actualités', 'Conseils', 'Destinations', 'Promotions'];
   
   const onRefresh = async () => {
     setRefreshing(true);

@@ -1,7 +1,6 @@
 import { useAuth } from '@/src/context/AuthContext';
-import articlesData from '@/src/data/articles.json';
 import voyagesData from '@/src/data/trips.json';
-import { Post } from '@/src/types';
+import useArticles from '@/src/hooks/usePosts';
 import { Voyage } from '@/src/types/voyage';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -15,13 +14,12 @@ import PopularVoyageCard from '../../shared/voyages/PopularVoyageCard';
 const popularVoyage:Voyage[] = voyagesData as Voyage[]
 
 
-const posts : Post[] =  articlesData as Post[]
-
 
 const HomePage = () => {
 
     const [refreshing, setRefreshing] = useState(false);
     const { user } = useAuth()
+    const { recentPosts:posts, isLoading } = useArticles();
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         // In a real app, we would fetch fresh data here

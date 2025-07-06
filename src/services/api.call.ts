@@ -2,7 +2,6 @@ import TokenService from '@/src/services/auth/tokenService';
 import axios from 'axios';
 import { DeviceEventEmitter } from 'react-native';
 import { API_BASE_URL } from '../constants/app';
-
 // Création d'une instance axios avec la base URL
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -48,6 +47,7 @@ api.interceptors.response.use(
       
       // Si le token est expiré ou invalide (401), déconnecter l'utilisateur
       if (error.response.status === 401) {
+
         console.log('Token expiré ou invalide. Redirection vers la page de connexion...');
         await TokenService.removeToken();
         DeviceEventEmitter.emit('SESSION_EXPIRED');
