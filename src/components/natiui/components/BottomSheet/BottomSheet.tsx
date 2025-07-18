@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
+  KeyboardAvoidingView,
   Modal,
   PanResponder,
+  Platform,
   StyleSheet,
   Text,
   TextStyle,
@@ -214,7 +216,11 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       animationType="none"
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        keyboardVerticalOffset={0}
+      >
         {/* Overlay */}
         <TouchableWithoutFeedback onPress={handleOverlayPress}>
           <Animated.View
@@ -272,7 +278,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             {children}
           </View>
         </Animated.View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -313,7 +319,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingBottom: 8,
   },
 });
 

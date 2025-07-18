@@ -8,14 +8,15 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PaymentScreen() {
   const params = useLocalSearchParams();
@@ -133,7 +134,7 @@ export default function PaymentScreen() {
       // Create a new ticket
       const newTicket = createTicket({
         tripId: voyage.id,
-        userId: user?.id || 'guest',
+        userId: user?.id.toString() || 'guest',
         seats: seats,
         tripType,
         passengerName: isForSelf ? user?.name || '' : passengerName,
@@ -149,8 +150,8 @@ export default function PaymentScreen() {
       if (newTicket) {
         // Navigate to confirmation page
         router.push({
-          pathname: '/voyage/confirmation',
-          params: { ticketId: newTicket.id }
+          pathname: '/voyage/reservation/[id]',
+          params: { id: newTicket.id }
         });
       } else {
         Alert.alert('Erreur', 'Une erreur est survenue lors de la création du ticket.');
@@ -159,7 +160,7 @@ export default function PaymentScreen() {
   };
   
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       
       {/* Header with back button */}
@@ -307,7 +308,7 @@ export default function PaymentScreen() {
           {isLoading ? "Traitement en cours..." : "Payer " + totalPrice + " FCFA"}
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

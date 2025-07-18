@@ -4,13 +4,15 @@ import CustumAvatar from '@/src/components/shared/CustumAvatar';
 import CommentSection from '@/src/components/shared/posts/CommentSection';
 import { API_BASE_URL } from '@/src/constants/app';
 import usePosts from '@/src/hooks/usePosts';
+import { Comment } from '@/src/types';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   Share,
@@ -22,13 +24,44 @@ import {
 
 export default function ArticleDetailScreen() {
   const { id } = useLocalSearchParams();
-  const { getPostById, likePost, isLoading } = usePosts();
-  const [isLiked, setIsLiked] = useState(false);
+  const { getPostById, 
+    likePost, 
+    fetchPostById, 
+    addComment, 
+    deleteComment,
+    getComments, 
+    isLoading, 
+    likeLoading,
+    commentAddingLoading
+  } = usePosts();
   const [openCommentSection, setOpenCommentSection] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [postComments, setPostComments] = useState<Comment[]>([]);
+  const [deletingComment, setDeletingComment] = useState(false);
+  
+  const article = getPostById(id as string);
+  
+  const [isLiked, setIsLiked] = useState(article?.i_liked || false);
+  
+  // Charger les commentaires depuis l'API
+  useEffect(() => {
+    if (openCommentSection && id) {
+      loadComments();
+    }
+  }, [openCommentSection, id]);
+  
+  const loadComments = async () => {
+    if (!id) return;
+    
+    try {
+      const comments = await getComments(id as string);
+      setPostComments(comments);
+    } catch (error) {
+      console.error('Error loading comments:', error);
+    }
+  };
 
   // Get article details using the ID from URL params
-  const article = getPostById(id as string);
-  console.log(id);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -63,8 +96,9 @@ export default function ArticleDetailScreen() {
   };
 
   const handleLike = () => {
-    likePost(article.id);
-    setIsLiked(!isLiked);
+    likePost(article.id).then(() => {
+      setIsLiked(!isLiked);
+    });
   };
 
   const handleShare = async () => {
@@ -83,6 +117,37 @@ export default function ArticleDetailScreen() {
   function handleComment(): void {
     setOpenCommentSection(!openCommentSection);
   }
+  
+  const handleAddComment = async (comment: string): Promise<void> => {
+    if (!id) return;
+    
+    setCommentLoading(true);
+    try {
+      const newComment = await addComment(id as string, comment);
+      // Mettre à jour directement les commentaires locaux sans recharger
+      setPostComments(prevComments => [...prevComments, newComment]);
+      // Ne pas recharger tous les commentaires pour éviter les problèmes de synchronisation
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    } finally {
+      setCommentLoading(false);
+    }
+  };
+  
+  const handleDeleteComment = async (commentId: string): Promise<void> => {
+    if (!id) return;
+    
+    setDeletingComment(true);
+    try {
+      await deleteComment(id as string, commentId);
+      // Mettre à jour directement les commentaires locaux sans recharger
+      setPostComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    } finally {
+      setDeletingComment(false);
+    }
+  };
 
 
 
@@ -153,11 +218,16 @@ export default function ArticleDetailScreen() {
               style={[styles.actionButton, isLiked && styles.likedButton]}
               onPress={handleLike}
             >
-              <Ionicons
-                name={isLiked ? "heart" : "heart-outline"}
-                size={20}
-                color={isLiked ? "#EF4444" : "#6B7280"}
-              />
+              {likeLoading ? (
+                <ActivityIndicator size="small" color="#EF4444" />
+              ) : (
+                <Ionicons
+                  name={isLiked ? "heart" : "heart-outline"}
+                  size={20}
+                  color={isLiked ? "#EF4444" : "#6B7280"}
+                />
+              )}
+
               <Text
                 style={[styles.actionText, isLiked && styles.likedText]}
               >
@@ -233,7 +303,14 @@ export default function ArticleDetailScreen() {
         title="Commentaires"
         children={
             <View style={[styles.commentsContainer, { width: '100%', height: '100%' }]}>
-              <CommentSection comments={article.comments} inBottomSheet={true} />
+              <CommentSection 
+                comments={postComments} 
+                inBottomSheet={true} 
+                onAddComment={handleAddComment}
+                onDeleteComment={handleDeleteComment}
+                isAddingComment={commentAddingLoading}
+                currentUserId="1" // Remplacer par l'ID de l'utilisateur connecté
+              />
             </View>
         } />
     </View>

@@ -15,6 +15,7 @@ export interface Post {
       avatar?: string;
     };
     comments: Comment[];
+    i_liked: boolean;
   }
 
   export interface Comment {

@@ -35,8 +35,8 @@ const useVoyage = () => {
                     vehicleType: trip.vehicleType as 'bus' | 'train' | 'ferry'
                 }));
 
-                setTrips(typedTrips);
-                setFilteredTrips(typedTrips);
+                setTrips(typedTrips as Voyage[]);
+                setFilteredTrips(typedTrips as Voyage[]);
             } catch (error) {
                 console.error('Error fetching trips:', error);
             } finally {
@@ -99,7 +99,7 @@ const useVoyage = () => {
                 vehicleType: trip.vehicleType as 'bus' | 'train' | 'ferry'
             }));
 
-            return typedTrips.find(trip => trip.id === id);
+            return typedTrips.find(trip => trip.id === id) as Voyage;
         }
 
         // Sinon, utiliser les voyages déjà chargés

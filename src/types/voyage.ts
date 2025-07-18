@@ -22,3 +22,10 @@ export interface Voyage {
     popularity?: number; // Ajout de la propriété popularity optionnelle
 }
   
+
+export interface payementModeTypeList{
+  logo : string,
+  name : string,
+  type : string,
+  redirect_url : string
+}
