@@ -1,21 +1,25 @@
-import { payementModeTypeList, Voyage } from "../types";
-import api from "./api.call";
+import api from "@/src/config/api/axios.api";
+import { payementModeTypeList, Seat, TripFilters, Voyage, VoyageDetail } from "../types";
 
 export default class VoyageService {
     
     
-    public getVoyageList = async (): Promise<Voyage[]> => {
-        const response = await api.get("/trips")
-        return response.data;
+    public static getVoyageList = async ({filters = {}}: {filters?: TripFilters}): Promise<Voyage[]> => {
+        return await api.get<Voyage[]>("/trips", {params: filters}).then(response => {
+            console.log("response : ", response);
+            return  response.data
+        })
     }
 
-    public getVoyageById = async (id: string): Promise<Voyage> => {
-        const response = await api.get(`/trips/${id}`)
-        return response.data;
+    public static getVoyageById = async (id: string): Promise<VoyageDetail> => {
+        return await api.get(`/trips/${id}`).then(response => response.data)
     }
 
-    public getPayementModeList = async (): Promise<payementModeTypeList[]> => {
-        const response = await api.get("/payement/mode-list")
-        return response.data;
+    public static getPayementModeList = async (): Promise<payementModeTypeList[]> => {
+        return await api.get("/payement/mode-list").then(response => response.data)
+    }
+
+    public static getSeatList = async (id: string): Promise<Seat[]> => {
+        return await api.get(`/trips/${id}/seats`).then(response => response.data)
     }
 }

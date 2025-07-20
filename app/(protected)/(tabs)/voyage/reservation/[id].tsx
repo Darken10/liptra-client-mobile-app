@@ -1,39 +1,49 @@
 import { colors } from '@/src/components/natiui';
 import Input from '@/src/components/shared/Input';
+import { formatMontant } from '@/src/helpers';
 import useVoyage from '@/src/hooks/useVoyage';
+import { Seat, VoyageDetail } from '@/src/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@natiui/components';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function SeatSelectionScreen() {
   const { id } = useLocalSearchParams();
-  const { getVoyageById } = useVoyage();
+  const { getVoyageById, getSeats } = useVoyage();
   
-  // Get trip details using the ID from URL params
-  const voyage = getVoyageById(id as string);
-  
+  const [voyage, setVoyage] = useState<VoyageDetail | null>(null);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+  const [seats, setSeats] = useState<Seat[]>([]);
   
-  // Simuler un temps de chargement pour démontrer le loader
+  
+  // Récupérer les détails du voyage en utilisant l'ID depuis les paramètres d'URL
   React.useEffect(() => {
-    // Dans une vraie application, ce délai serait remplacé par le temps réel de chargement des données
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 1500);
+    const fetchVoyage = async () => {
+      try {
+        const result = await getVoyageById(id as string);
+        setVoyage(result as VoyageDetail);
+        const seatsResult = await getSeats(id as string);
+        setSeats(seatsResult);
+        setIsPageLoading(false);
+      } catch (error) {
+        console.error('Erreur lors du chargement du voyage:', error);
+        setIsPageLoading(false);
+      }
+    };
     
-    return () => clearTimeout(timer);
-  }, []);
+    fetchVoyage();
+  }, [id]);
   
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [isForSelf, setIsForSelf] = useState<boolean>(true);
@@ -72,97 +82,51 @@ export default function SeatSelectionScreen() {
     );
   }
   
-  // Mock available and unavailable seats
-  const totalSeats = 49; // Total seats in the vehicle based on the bus layout image
-  // Les sièges déjà occupés (en vert sur l'image)
-  const unavailableSeats = ['3',  '31', '36', '39', '44', '47', '14', '17','29', '34', '37', '42'];
-  
-  if (!voyage) {
-    return (
-      <View style={styles.notFoundContainer}>
-        <Ionicons name="alert-circle-outline" size={64} color="#D1D5DB" />
-        <Text style={styles.notFoundTitle}>Voyage non trouvé</Text>
-        <Text style={styles.notFoundText}>
-          Le voyage que vous recherchez n'existe pas ou a été supprimé.
-        </Text>
-        <Button
-          onPress={() => router.push('/voyage')}
-          style={{ marginTop: 24 }}
-        >
-          Retour à la recherche
-        </Button>
-      </View>
-    );
-  }
-
   const generateSeats = () => {
-    // Création du plan de sièges selon l'image du car
-    // Structure: [rangée gauche avant, rangée droite avant, rangée gauche arrière, rangée droite arrière]
+    // Organiser les sièges en 5 colonnes
+    const columns: Array<Array<{
+      id: string;
+      name: string;
+      price: number;
+      type: string;
+      care?: string;
+      is_available?: boolean;
+      isUnavailable: boolean;
+      isSelected: boolean;
+    }>> = [[], [], [], [], []];
     
-    // Définition des rangées et des sièges selon l'image
-    const leftFrontRow = [
-      { id: '3', position: 'left' },
-      { id: '8', position: 'left' },
-      { id: '11', position: 'left' },
-      { id: '16', position: 'left' },
-      { id: '19', position: 'left' }
-    ];
-    
-    const rightFrontRow = [
-      { id: '28', position: 'right' },
-      { id: '31', position: 'right' },
-      { id: '36', position: 'right' },
-      { id: '39', position: 'right' },
-      { id: '44', position: 'right' },
-      { id: '47', position: 'right' },
-      { id: '49', position: 'right' }
-    ];
-    
-    const leftBackRow = [
-      { id: '2', position: 'left' },
-      { id: '6', position: 'left' },
-      { id: '9', position: 'left' },
-      { id: '14', position: 'left' },
-      { id: '17', position: 'left' },
-      { id: '22', position: 'left' }
-    ];
-    
-    const rightBackRow = [
-      { id: '26', position: 'right' },
-      { id: '29', position: 'right' },
-      { id: '34', position: 'right' },
-      { id: '37', position: 'right' },
-      { id: '42', position: 'right' },
-      { id: '45', position: 'right' }
-    ];
-    
-    // Ajouter les informations d'état pour chaque siège
-    const processRow = (row: any[]) => {
-      return row.map(seat => ({
+    // Traiter les sièges récupérés de l'API
+    seats.forEach((seat, index) => {
+      // Déterminer dans quelle colonne placer le siège (0 à 4)
+      const columnIndex = index % 5;
+      
+      // Ajouter les informations d'état pour chaque siège
+      const processedSeat = {
         ...seat,
-        isUnavailable: unavailableSeats.includes(seat.id),
+        id: seat.id,
+        isUnavailable: !seat.is_available,
         isSelected: selectedSeats.includes(seat.id)
-      }));
-    };
+      };
+      
+      // Ajouter le siège à la colonne appropriée
+      columns[columnIndex].push(processedSeat);
+    });
     
-    return {
-      leftFrontRow: processRow(leftFrontRow),
-      rightFrontRow: processRow(rightFrontRow),
-      leftBackRow: processRow(leftBackRow),
-      rightBackRow: processRow(rightBackRow)
-    };
+    return columns;
   };
 
   const handleSeatPress = (seatId: string) => {
-    if (unavailableSeats.includes(seatId)) {
-      return; // Seat is unavailable
+    // Vérifier si le siège est disponible
+    const seat = seats.find(s => s.id === seatId);
+    if (!seat || !seat.is_available) {
+      return; // Siège indisponible
     }
     
     setSelectedSeats(prevSelected => {
       if (prevSelected.includes(seatId)) {
         return prevSelected.filter(id => id !== seatId);
       } else {
-        // Limit to 4 seats per booking
+        // Limite à 4 sièges par réservation
         if (prevSelected.length >= 4) {
           Alert.alert(
             'Maximum atteint',
@@ -230,13 +194,7 @@ export default function SeatSelectionScreen() {
   };
 
   const handleContinue = () => {
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      handleSubmit();
-    }, 1000);
+    handleSubmit();
   };
 
   const renderSeatLegend = () => (
@@ -315,22 +273,21 @@ export default function SeatSelectionScreen() {
           <View style={styles.vehicleContainer}>
             {/* Driver seat - hidden since we now have it in the bus layout */}
             
-            {/* Seat map based on the bus layout image */}
+            {/* Affichage des sièges en 5 colonnes */}
             <View style={styles.busContainer}>
-              {/* Front of the bus */}
+              {/* En-tête avec l'icône du conducteur */}
               <View style={styles.busFront}>
                 <View style={styles.driverArea}>
                   <Ionicons name="car-outline" size={24} color="#1F2937" />
                 </View>
               </View>
               
-              {/* Main seating area */}
-              <View style={styles.busSeatingArea}>
-                {/* Left side rows */}
-                <View style={styles.busSide}>
-                  {/* Left front row */}
-                  <View style={styles.seatColumn}>
-                    {generateSeats().leftFrontRow.map((seat: any) => (
+              {/* Zone principale des sièges */}
+              <View style={styles.seatingArea}>
+                {/* Affichage des 5 colonnes de sièges */}
+                {generateSeats().map((column, columnIndex) => (
+                  <View key={`column-${columnIndex}`} style={styles.seatColumn}>
+                    {column.map((seat) => (
                       <TouchableOpacity
                         key={seat.id}
                         style={[
@@ -344,109 +301,22 @@ export default function SeatSelectionScreen() {
                         <Text 
                           style={[
                             styles.busSeatText,
-                            seat.isSelected && styles.selectedSeat
+                            seat.isSelected && styles.busSeatTextSelected
                           ]}
                         >
-                          {seat.id}
+                          {seat.name || seat.id}
                         </Text>
                       </TouchableOpacity>
                     ))}
                   </View>
-                  
-                  {/* Center aisle */}
-                  <View style={styles.busAisle} />
-                  
-                  {/* Left back row */}
-                  <View style={styles.seatColumn}>
-                    {generateSeats().leftBackRow.map((seat: any) => (
-                      <TouchableOpacity
-                        key={seat.id}
-                        style={[
-                          styles.busSeat,
-                          seat.isUnavailable && styles.unavailableSeat,
-                          seat.isSelected && styles.selectedSeat
-                        ]}
-                        onPress={() => handleSeatPress(seat.id)}
-                        disabled={seat.isUnavailable}
-                      >
-                        <Text 
-                          style={[
-                            styles.busSeatText,
-                            seat.isSelected && styles.selectedSeatText
-                          ]}
-                        >
-                          {seat.id}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-                
-                {/* Center aisle */}
-                <View style={styles.mainAisle} />
-                
-                {/* Right side rows */}
-                <View style={styles.busSide}>
-                  {/* Right front row */}
-                  <View style={styles.seatColumn}>
-                    {generateSeats().rightFrontRow.map((seat: any) => (
-                      <TouchableOpacity
-                        key={seat.id}
-                        style={[
-                          styles.busSeat,
-                          seat.isUnavailable && styles.unavailableSeat,
-                          seat.isSelected && styles.selectedSeat
-                        ]}
-                        onPress={() => handleSeatPress(seat.id)}
-                        disabled={seat.isUnavailable}
-                      >
-                        <Text 
-                          style={[
-                            styles.busSeatText,
-                            seat.isSelected && styles.selectedSeatText
-                          ]}
-                        >
-                          {seat.id}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  
-                  {/* Center aisle */}
-                  <View style={styles.busAisle} />
-                  
-                  {/* Right back row */}
-                  <View style={styles.seatColumn}>
-                    {generateSeats().rightBackRow.map((seat: any) => (
-                      <TouchableOpacity
-                        key={seat.id}
-                        style={[
-                          styles.busSeat,
-                          seat.isUnavailable && styles.unavailableSeat,
-                          seat.isSelected && styles.selectedSeat
-                        ]}
-                        onPress={() => handleSeatPress(seat.id)}
-                        disabled={seat.isUnavailable}
-                      >
-                        <Text 
-                          style={[
-                            styles.busSeatText,
-                            seat.isSelected && styles.selectedSeatText
-                          ]}
-                        >
-                          {seat.id}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
+                ))}
               </View>
-              
+            </View>  
               {/* Back of the bus */}
               <View style={styles.busBack} />
             </View>
           </View>
-        </View>
+
         
         {/* Type de voyage (aller simple ou aller-retour) */}
         <View style={styles.tripTypeContainer}>
@@ -537,19 +407,19 @@ export default function SeatSelectionScreen() {
           
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>
-              {selectedSeats.length} {selectedSeats.length > 1 ? 'sièges' : 'siège'} x {voyage?.price?.toFixed(2) || '0.00'} €
+              {selectedSeats.length} {selectedSeats.length > 1 ? 'sièges' : 'siège'} x {formatMontant(voyage?.price || 0)} 
             </Text>
-            <Text style={styles.priceValue}>{((voyage?.price || 0) * selectedSeats.length).toFixed(2)} €</Text>
+            <Text style={styles.priceValue}>{formatMontant((voyage?.price || 0) * selectedSeats.length)}</Text>
           </View>
           
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Frais de service</Text>
-            <Text style={styles.priceValue}>2.00 €</Text>
+            <Text style={[styles.priceValue,{color:"#50C878"}]}>Gratuit</Text>
           </View>
           
           <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>{(calculateTotalPrice() + 2).toFixed(2)} €</Text>
+            <Text style={styles.totalValue}>{formatMontant(calculateTotalPrice())}</Text>
           </View>
         </View>
       </ScrollView>
@@ -559,7 +429,7 @@ export default function SeatSelectionScreen() {
         <View style={styles.bottomBarContent}>
           <View style={styles.priceContainer}>
             <Text style={styles.totalPriceLabel}>Total</Text>
-            <Text style={styles.totalPriceValue}>{(calculateTotalPrice() + 2).toFixed(2)} €</Text>
+            <Text style={styles.totalPriceValue}>{formatMontant(calculateTotalPrice())}</Text>
           </View>
           
           <Button
@@ -613,40 +483,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: '#3B82F6',
     paddingTop: 48,
     paddingBottom: 16,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
-    color: colors.white,
+    color: '#FFFFFF',
+  },
+  backButton: {
+    padding: 8,
   },
   content: {
     flex: 1,
   },
   tripSummary: {
-    backgroundColor: colors.white,
+    backgroundColor: '#FFFFFF',
     padding: 16,
     marginHorizontal: 16,
     marginTop: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.1,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 2,
   },
   routeContainer: {
     flexDirection: 'row',
@@ -658,47 +522,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#1F2937',
+    flex: 1,
   },
   routeLineContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 8,
+    flex: 2,
+    justifyContent: 'center',
   },
   routeLine: {
     height: 1,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#D1D5DB',
     flex: 1,
   },
   tripDetails: {
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    paddingTop: 12,
+    marginTop: 8,
   },
   tripDate: {
     fontSize: 14,
     color: '#4B5563',
     marginBottom: 4,
   },
-  tripTime: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1F2937',
-  },
   seatSelectionContainer: {
     backgroundColor: '#FFFFFF',
     padding: 16,
     marginHorizontal: 16,
     marginTop: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.1,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 2,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#1F2937',
     marginBottom: 16,
@@ -707,6 +565,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 16,
+    paddingHorizontal: 8,
   },
   legendItem: {
     flexDirection: 'row',
@@ -716,11 +575,11 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 4,
-    marginRight: 4,
+    marginRight: 8,
   },
   legendText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#4B5563',
   },
   availableSeat: {
     backgroundColor: '#FFFFFF',
@@ -729,99 +588,72 @@ const styles = StyleSheet.create({
   },
   selectedSeat: {
     backgroundColor: '#3B82F6',
-    borderWidth: 1,
     borderColor: '#3B82F6',
   },
   unavailableSeat: {
     backgroundColor: '#E5E7EB',
-    borderWidth: 1,
     borderColor: '#E5E7EB',
   },
   vehicleContainer: {
-    backgroundColor: '#F3F4F6',
-    borderRadius: 8,
-    padding: 16,
-  },
-  driverContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 16,
   },
   busContainer: {
-    width: '100%',
     backgroundColor: '#F3F4F6',
-    borderRadius: 12,
+    borderRadius: 8,
     padding: 16,
-    marginTop: 16,
-    alignItems: 'center',
+    marginBottom: 16,
   },
   busFront: {
-    width: '80%',
     height: 40,
     backgroundColor: '#D1D5DB',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  driverArea: {
+    width: 32,
+    height: 32,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  busSeatingArea: {
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-  },
-  busSide: {
-    flex: 1,
+  seatingArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
   seatColumn: {
-    flexDirection: 'column',
+    width: '18%',
+    marginHorizontal: '1%',
   },
   busSeat: {
-    width: 36,
-    height: 36,
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 4,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 4,
-    margin: 4,
-    borderWidth: 1,
-    borderColor: '#1E40AF',
+    marginVertical: 4,
   },
   busSeatText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#1E40AF',
+    color: '#4B5563',
   },
-  mainAisle: {
-    width: 20,
-    backgroundColor: '#E5E7EB',
-  },
-  busAisle: {
-    width: 10,
+  busSeatTextSelected: {
+    color: '#FFFFFF',
   },
   busBack: {
-    width: '80%',
-    height: 20,
+    height: 16,
     backgroundColor: '#D1D5DB',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  selectedSeatText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#1E40AF',
-  },
-  driverArea: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#4B5563',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    marginTop: 16,
   },
   driverSeat: {
     width: 30,
@@ -959,5 +791,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#1F2937',
-  }
+  },
+  tripTime: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1F2937',
+  },
 });

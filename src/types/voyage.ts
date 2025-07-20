@@ -21,6 +21,47 @@ export interface Voyage {
     vehicleType: 'bus' | 'train' | 'ferry';
     popularity?: number; // Ajout de la propriété popularity optionnelle
 }
+
+export interface VoyageDetail {
+  id: string;
+  departure: {
+    city: string;
+    station: string;
+    time: string; // Format: "YYYY-MM-DD HH:mm:ss"
+  };
+  arrival: {
+    city: string;
+    station: string;
+    time: string;
+  };
+  company: string;
+  price: number;
+  aller_retour_price: number;
+  duration: string; // Format: "HH:mm:ss"
+  availableSeats: number;
+  vehicleType: string;
+  popularity: number;
+  chauffer: {
+    id: string | null;
+    name: string;
+    genre: string;
+  };
+  vehicle: {
+    id: string;
+    name: string;
+    type: string;
+    seats_number: number;
+    classe: string;
+    image: string | null;
+    features: {
+      id: string;
+      name: string;
+      description: string;
+    }[];
+  };
+  seats: Seat[];
+}
+
   
 
 export interface payementModeTypeList{
@@ -29,3 +70,23 @@ export interface payementModeTypeList{
   type : string,
   redirect_url : string
 }
+
+export interface TripFilters {
+  departureCity?: string;
+  arrivalCity?: string;
+  date?: string; // Format ISO recommandé: 'YYYY-MM-DD'
+  company?: string;
+}
+
+export interface SearchParams extends TripFilters {
+    passengers?: number;
+}
+export interface Seat {
+    id: string;
+    name: string;
+    price: number;
+    type: string;
+    care?: string;
+    is_available?: boolean;
+}
+

@@ -179,6 +179,33 @@ const usePosts = () => {
     }
   };
 
+  const refreshArticles = () => {
+    refetchPosts();
+  };
+
+  const refetchPosts = async () => {
+    try {
+      setIsLoading(true);
+      const postsData = await PostService.getAllPosts();
+      // Extract unique categories and tags
+      const allCategories = [...new Set(postsData.data.map(post => post.category))];
+      
+      const allTags = [...new Set(
+        postsData.data.flatMap(post => post.tags)
+      )];
+      
+      setPosts(postsData.data);
+      setFilteredPosts(postsData.data);
+      setCategories(allCategories);
+      setTags(allTags);
+      setRecentPosts(postsData.data.slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     posts: filteredPosts,
     allPosts: posts,
@@ -197,7 +224,8 @@ const usePosts = () => {
     addComment,
     deleteComment,
     commentAddingLoading,
-    likeLoading
+    likeLoading,
+    refreshArticles
   };
 };
 

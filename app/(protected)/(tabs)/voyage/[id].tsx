@@ -1,41 +1,64 @@
 import { colors } from '@/src/components/natiui';
+import VoyageClassSection from '@/src/components/shared/voyages/VoyageClassSection';
+import { Toast } from '@/src/context/ToastContext';
+import { formatMontant } from '@/src/helpers';
 import useVoyages from '@/src/hooks/useVoyage';
+import { VoyageDetail } from '@/src/types';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@natiui/components';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function TripDetailScreen() {
   const { id } = useLocalSearchParams();
-  const { getVoyageById } = useVoyages();
+
+  // Destructure only what's needed from the hook
+  const { getVoyageById, isGetVoyageByIdLoading, isLoading } = useVoyages();
   const [selectedSeatCount, setSelectedSeatCount] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Simuler un temps de chargement pour démontrer le loader
-  React.useEffect(() => {
-    // Dans une vraie application, ce délai serait remplacé par le temps réel de chargement des données
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+  const [voyage, setVoyage] = useState<VoyageDetail | undefined>(undefined);
+  const [isBooking, setIsBooking] = useState(false);
+
+  // Use a local loading state instead of the one from the hook
+  useEffect(() => {
+    let isMounted = true;
+    const loadVoyage = async () => {
+      if (!id) return;
+      
+      console.log('Loading voyage with ID:', id);
+      
+      try {
+        const result = await getVoyageById(id as string);
+        // Only update state if the component is still mounted
+        if (isMounted) {
+          setVoyage(result);
+        }
+      } catch (error) {
+        console.error('Error loading voyage:', error);
+        if (isMounted) {
+        }
+      }
+    };
     
-    return () => clearTimeout(timer);
-  }, []);
+    loadVoyage();
+    
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
+  }, [id]); 
   
-  // Get trip details using the ID from URL params
-  const voyage = getVoyageById(id as string);
   
   // Afficher un loader pendant le chargement des données
   if (isLoading) {
@@ -87,25 +110,39 @@ export default function TripDetailScreen() {
 
   const handleBooking = () => {
     if (selectedSeatCount > voyage.availableSeats) {
-      Alert.alert(
-        'Erreur',
-        `Il n'y a que ${voyage.availableSeats} places disponibles pour ce voyage.`
-      );
+     Toast.show({
+      message: 'Il n\'y a que ' + voyage.availableSeats + ' places disponibles pour ce voyage.',
+      type: 'error',
+      duration: 3000
+    });
       return;
     }
     
-    setIsLoading(true);
+    router.push({
+      pathname: '/voyage/reservation/[id]',
+      params: { id: voyage.id, seatCount: selectedSeatCount }
+    });
     
-    // Simulate API call delay
-    setTimeout(() => {
-      setIsLoading(false);
-      // Utiliser la syntaxe correcte d'Expo Router pour les routes dynamiques
-      router.push({
-        pathname: '/voyage/reservation/[id]',
-        params: { id: voyage.id, seatCount: selectedSeatCount }
-      });
-    }, 1000);
   };
+  
+  const handleShare = () => {
+    // Afficher un toast d'information
+    Toast.show({
+      message: 'Lien de partage copié dans le presse-papier',
+      type: 'info',
+      duration: 3000
+    });
+  };
+  
+  const handleFavorite = () => {
+    // Afficher un toast de succès sans action
+    Toast.show({
+      message: 'Voyage ajouté à vos favoris',
+      type: 'success',
+      duration: 3000
+    });
+  };
+
 
   return (
     <View style={styles.container}>
@@ -120,7 +157,14 @@ export default function TripDetailScreen() {
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Détails du voyage</Text>
-        <View style={{ width: 24 }} />
+        <View style={styles.headerActions}>
+          <TouchableOpacity style={styles.headerButton} onPress={handleShare}>
+            <Ionicons name="share-social-outline" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.headerButton} onPress={handleFavorite}>
+            <Ionicons name="heart-outline" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
       </View>
       
       <ScrollView style={styles.content}>
@@ -182,14 +226,16 @@ export default function TripDetailScreen() {
         
         {/* Trip details */}
         <View style={styles.detailsCard}>
-          <Text style={styles.sectionTitle}>Informations</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Informations</Text>
+          </View>
           
           <View style={styles.detailRow}>
             <View style={styles.detailItem}>
               <Ionicons name="cash-outline" size={20} color="#6B7280" />
               <View style={styles.detailContent}>
                 <Text style={styles.detailLabel}>Prix</Text>
-                <Text style={styles.detailValue}>{voyage.price} €</Text>
+                <Text style={styles.detailValue}>{formatMontant(voyage.price)}</Text>
               </View>
             </View>
             
@@ -220,48 +266,29 @@ export default function TripDetailScreen() {
             </View>
           </View>
         </View>
+
+        <VoyageClassSection voyage={voyage} />
         
         {/* Booking section */}
         <View style={styles.bookingCard}>
           <Text style={styles.sectionTitle}>Réserver</Text>
-          
-          <View style={styles.passengerSelector}>
-            <Text style={styles.passengerLabel}>Nombre de passagers</Text>
-            <View style={styles.counterContainer}>
-              <TouchableOpacity 
-                style={[
-                  styles.counterButton, 
-                  selectedSeatCount <= 1 && styles.disabledButton
-                ]}
-                onPress={() => selectedSeatCount > 1 && setSelectedSeatCount(selectedSeatCount - 1)}
-                disabled={selectedSeatCount <= 1}
-              >
-                <Ionicons name="remove" size={20} color={selectedSeatCount <= 1 ? "#D1D5DB" : "#6B7280"} />
-              </TouchableOpacity>
-              
-              <Text style={styles.counterValue}>{selectedSeatCount}</Text>
-              
-              <TouchableOpacity 
-                style={[
-                  styles.counterButton, 
-                  selectedSeatCount >= voyage.availableSeats && styles.disabledButton
-                ]}
-                onPress={() => selectedSeatCount < voyage.availableSeats && setSelectedSeatCount(selectedSeatCount + 1)}
-                disabled={selectedSeatCount >= voyage.availableSeats}
-              >
-                <Ionicons name="add" size={20} color={selectedSeatCount >= voyage.availableSeats ? "#D1D5DB" : "#6B7280"} />
-              </TouchableOpacity>
-            </View>
+          <View style={styles.priceSummary}>
+          <Text style={styles.priceLabel}>Nombre de Passagers</Text>
+            <Text style={styles.priceValue}>1</Text>
           </View>
           
           <View style={styles.priceSummary}>
-            <Text style={styles.priceLabel}>Prix total</Text>
-            <Text style={styles.priceValue}>{(voyage.price * selectedSeatCount).toFixed(2)} €</Text>
+          <Text style={styles.priceLabel}>Prix Allé simple</Text>
+            <Text style={styles.priceValue}>{formatMontant(voyage.price)}</Text>
+          </View>
+          <View style={styles.priceSummary}>
+            <Text style={styles.priceLabel}>Prix Allé Retour simple</Text>
+            <Text style={styles.priceValue}>{formatMontant(voyage.aller_retour_price)}</Text>
           </View>
           
           <Button
             onPress={handleBooking}
-            loading={isLoading}
+            loading={isBooking}
             style={styles.bookButton}
           >
             Réserver maintenant
@@ -272,10 +299,46 @@ export default function TripDetailScreen() {
   );
 }
 
+
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  testButtons: {
+    flexDirection: 'row',
+  },
+  testButton: {
+    backgroundColor: '#E5E7EB',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginLeft: 8,
+  },
+  testButtonText: {
+    fontSize: 12,
+    color: '#4B5563',
+  },
+  headerActions: {
+    flexDirection: 'row',
+  },
+  headerButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
   },
   loadingContainer: {
     flex: 1,

@@ -1,4 +1,5 @@
 import { NotificationProvider } from '@/src/context/NotificationContext';
+import { ToastProvider } from '@/src/context/ToastContext';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import React, { useEffect } from 'react';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
@@ -29,7 +30,9 @@ export default function RootLayout() {
     <AuthProvider>
       <AuthGate>
         <NotificationProvider>
-          <Stack screenOptions={{ headerShown: false }} />
+          <ToastProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </ToastProvider>
         </NotificationProvider>
       </AuthGate>
     </AuthProvider>

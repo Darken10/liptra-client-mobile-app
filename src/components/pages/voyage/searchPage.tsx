@@ -22,34 +22,34 @@ interface SearchPageProps {
 }
 
 const searchPage = ({ goBack }: SearchPageProps) => {
-  const { voyages, isLoading, popularDestination, searchVoyage } = useVoyage();
+  const { voyages, isLoading, popularDestination, searchVoyage, isSearchLoading } = useVoyage();
   const [departure, setDeparture] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState(new Date());
-  const [passengers, setPassengers] = useState('1');
   const [company, setCompany] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async () => {
-    setIsSearching(true);
-    await searchVoyage({ departureCity: departure, arrivalCity: destination, date: date.toISOString(), company, passengers: Number(passengers) });
+    await searchVoyage({ departureCity: departure, arrivalCity: destination, date: date.toISOString(), company });
     setHasSearched(true);
-
-    setTimeout(() => {
-      setIsSearching(false);
-    }, 1000);
   };
 
   const handleReset = () => {
     setDeparture('');
     setDestination('');
     setDate(new Date());
-    setPassengers('1');
     setCompany('');
     setHasSearched(false);
-    setIsSearching(false);
   };
+
+  if (isSearchLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3B82F6" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
 
 
 
@@ -95,16 +95,6 @@ const searchPage = ({ goBack }: SearchPageProps) => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Ionicons name="people-outline" size={20} color="#6B7280" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Nombre de passagers"
-                value={passengers}
-                onChangeText={setPassengers}
-                keyboardType="number-pad"
-              />
-            </View>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -156,7 +146,7 @@ const searchPage = ({ goBack }: SearchPageProps) => {
           </View>
         ) : (
           <View style={styles.resultsContainer}>
-            {isSearching ? (
+            {isSearchLoading ? (
               <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#3B82F6" />
                 <Text style={styles.loadingText}>Recherche en cours...</Text>

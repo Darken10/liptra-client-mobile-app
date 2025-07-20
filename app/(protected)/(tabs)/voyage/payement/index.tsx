@@ -126,36 +126,30 @@ export default function PaymentScreen() {
       return;
     }
     
-    setIsLoading(true);
+    // Create a new ticket
+    const newTicket = createTicket({
+      tripId: voyage.id,
+      userId: user?.id || 'guest',
+      seats: seats,
+      tripType,
+      passengerName: isForSelf ? user?.name || '' : passengerName,
+      passengerEmail: isForSelf ? user?.email || '' : passengerEmail,
+      passengerPhone: isForSelf ? user?.numero?.toString() || '' : passengerPhone,
+      isForSelf,
+      relationToPassenger: isForSelf ? '' : relationToPassenger,
+      status: 'valid'
+    });
     
-    // Simulate payment processing
-    setTimeout(() => {
-      // Create a new ticket
-      const newTicket = createTicket({
-        tripId: voyage.id,
-        userId: user?.id || 'guest',
-        seats: seats,
-        tripType,
-        passengerName: isForSelf ? user?.name || '' : passengerName,
-        passengerEmail: isForSelf ? user?.email || '' : passengerEmail,
-        passengerPhone: isForSelf ? user?.numero?.toString() || '' : passengerPhone,
-        isForSelf,
-        relationToPassenger: isForSelf ? '' : relationToPassenger,
-        status: 'valid'
+    
+    if (newTicket) {
+      // Navigate to confirmation page
+      router.push({
+        pathname: '/voyage/confirmation',
+        params: { ticketId: newTicket.id }
       });
-      
-      setIsLoading(false);
-      
-      if (newTicket) {
-        // Navigate to confirmation page
-        router.push({
-          pathname: '/voyage/confirmation',
-          params: { ticketId: newTicket.id }
-        });
-      } else {
-        Alert.alert('Erreur', 'Une erreur est survenue lors de la création du ticket.');
-      }
-    }, 2000);
+    } else {
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la création du ticket.');
+    }
   };
   
   return (
