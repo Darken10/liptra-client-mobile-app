@@ -22,20 +22,9 @@ export default function PaymentScreen() {
   const { user } = useAuth();
   const { getVoyageById } = useVoyage();
   const { createTicket } = useTickets();
-  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
-  
-  // Simuler un temps de chargement pour démontrer le loader
-  React.useEffect(() => {
-    // Dans une vraie application, ce délai serait remplacé par le temps réel de chargement des données
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);  
   // Extract params
-  const tripId = params.tripId as string;
+  const voyageId = params.tripId as string;
   const seats = (params.seats as string || '').split(',');
   const tripType = params.tripType as 'one-way' | 'round-trip';
   const isForSelf = params.isForSelf === 'true';
@@ -49,9 +38,24 @@ export default function PaymentScreen() {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [voyage, setVoyage] = useState<VoyageDetail | null>(null);
+    
   
   // Get trip details
-  const voyage = getVoyageById(tripId);
+  React.useEffect(() => {
+      const fetchVoyage = async () => {
+        try {
+          const result = await getVoyageById(voyageId as string);
+          setVoyage(result as VoyageDetail);
+          setIsPageLoading(false);
+        } catch (error) {
+          console.error('Erreur lors du chargement du voyage:', error);
+          setIsPageLoading(false);
+        }
+      };
+      
+      fetchVoyage();
+    }, [voyageId]);
   
   // Afficher un loader pendant le chargement des données
   if (isPageLoading) {
