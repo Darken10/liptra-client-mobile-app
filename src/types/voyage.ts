@@ -90,3 +90,17 @@ export interface Seat {
     is_available?: boolean;
 }
 
+
+
+export interface PaymentScreenParams {
+  tripId: string;
+  seats: string;
+  tripType: 'one-way' | 'round-trip';
+  isForSelf: 'true' | 'false';
+  passengerName: string;
+  passengerEmail: string;
+  passengerPhone: string;
+  relationToPassenger: string;
+  totalPrice: string;
+  payementMode: string;
+}

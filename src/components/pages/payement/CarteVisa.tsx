@@ -1,6 +1,5 @@
 import { Button } from '@/src/components/natiui';
-import PaymentMethodCard from '@/src/components/pages/payement/PaymentMethodCard';
-import { paymentMethodsList } from '@/src/constants/payementMethodeList';
+import Input from '@/src/components/shared/Input';
 import { useAuth } from '@/src/context/AuthContext';
 import useTickets from '@/src/hooks/useTickets';
 import useVoyage from '@/src/hooks/useVoyage';
@@ -10,15 +9,16 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
-export default function PaymentScreen() {
+export default function CarteVisa() {
   const params = useLocalSearchParams();
   const { user } = useAuth();
   const { getVoyageById } = useVoyage();
@@ -34,9 +34,12 @@ export default function PaymentScreen() {
   const passengerPhone = params.passengerPhone as string;
   const relationToPassenger = params.relationToPassenger as string;
   
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [voyage, setVoyage] = useState<VoyageDetail | null>(null);
-
-
     
   
   // Get trip details
@@ -87,25 +90,73 @@ export default function PaymentScreen() {
   const pricePerSeat = voyage.price;
   const totalPrice = pricePerSeat * seats.length;
   
-  const handlePaymentMethod = (method: any) => {
-    console.log('Selected payment method:', method);
-    router.push({
-      pathname: '/voyage/payement/choix/' + method.path,
-      params: { payementMode: method.path,
-        tripId: voyage.id,
-        seats: seats,
-        tripType: tripType,
-        isForSelf: isForSelf ? 'true' : 'false',
-        passengerName: passengerName,
-        passengerEmail: passengerEmail,
-        passengerPhone: passengerPhone,
-        relationToPassenger: relationToPassenger,
-        totalPrice: totalPrice,
-       }
-    });
+  const formatCardNumber = (text: string) => {
+    // Remove non-digit characters
+    const cleaned = text.replace(/\D/g, '');
+    // Add space after every 4 digits
+    const formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
+    // Limit to 19 characters (16 digits + 3 spaces)
+    return formatted.slice(0, 19);
   };
   
-
+  const formatExpiryDate = (text: string) => {
+    // Remove non-digit characters
+    const cleaned = text.replace(/\D/g, '');
+    // Format as MM/YY
+    if (cleaned.length > 2) {
+      return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
+    }
+    return cleaned;
+  };
+  
+  const handlePayment = () => {
+    // Validate payment information
+    if (!cardNumber.trim() || cardNumber.replace(/\s/g, '').length < 16) {
+      Alert.alert('Erreur', 'Veuillez entrer un numéro de carte valide.');
+      return;
+    }
+    
+    if (!cardName.trim()) {
+      Alert.alert('Erreur', 'Veuillez entrer le nom sur la carte.');
+      return;
+    }
+    
+    if (!expiryDate.trim() || expiryDate.length < 5) {
+      Alert.alert('Erreur', 'Veuillez entrer une date d\'expiration valide.');
+      return;
+    }
+    
+    if (!cvv.trim() || cvv.length < 3) {
+      Alert.alert('Erreur', 'Veuillez entrer un code CVV valide.');
+      return;
+    }
+    
+    // Create a new ticket
+    const newTicket = createTicket({
+      tripId: voyage.id,
+      userId: user?.id.toString() || 'guest',
+      seats: seats,
+      tripType,
+      passengerName: isForSelf ? user?.name || '' : passengerName,
+      passengerEmail: isForSelf ? user?.email || '' : passengerEmail,
+      passengerPhone: isForSelf ? user?.numero?.toString() || '' : passengerPhone,
+      isForSelf,
+      relationToPassenger: isForSelf ? '' : relationToPassenger,
+      status: 'valid'
+    });
+    
+    
+    if (newTicket) {
+      // Navigate to confirmation page
+      router.push({
+        pathname: '/voyage/payement/comfirmation',
+        params: { ticketId: newTicket.id }
+      });
+    } else {
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la création du ticket.');
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -198,20 +249,63 @@ export default function PaymentScreen() {
         
         {/* Payment form */}
         <View style={styles.paymentForm}>
-          <Text style={styles.sectionTitle}>Choisir le mode de paiement</Text>
+          <Text style={styles.sectionTitle}>Informations de paiement</Text>
           
-          {paymentMethodsList.map((item) => (
-            <PaymentMethodCard
-              key={item.id}
-              method={item}
-              onPress={() => handlePaymentMethod(item)}
-            />
-          ))}
+          <Input
+            label="Numéro de carte"
+            placeholder="1234 5678 9012 3456"
+            value={cardNumber}
+            onChangeText={(text) => setCardNumber(formatCardNumber(text))}
+            keyboardType="numeric"
+            maxLength={19}
+            leftIcon={<Ionicons name="card-outline" size={20} color="#6B7280" />}
+          />
           
-         
+          <Input
+            label="Nom sur la carte"
+            placeholder="JEAN DUPONT"
+            value={cardName}
+            onChangeText={setCardName}
+            autoCapitalize="characters"
+          />
+          
+          <View style={styles.row}>
+            <View style={styles.halfInput}>
+              <Input
+                label="Date d'expiration"
+                placeholder="MM/YY"
+                value={expiryDate}
+                onChangeText={(text) => setExpiryDate(formatExpiryDate(text))}
+                keyboardType="numeric"
+                maxLength={5}
+              />
+            </View>
+            
+            <View style={styles.halfInput}>
+              <Input
+                label="CVV"
+                placeholder="123"
+                value={cvv}
+                onChangeText={setCvv}
+                keyboardType="numeric"
+                maxLength={4}
+                secureTextEntry
+              />
+            </View>
+          </View>
         </View>
       </ScrollView>
       
+      <View style={styles.footer}>
+        <Button
+          size="large"
+          onPress={handlePayment}
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          {isLoading ? "Traitement en cours..." : "Payer " + totalPrice + " FCFA"}
+        </Button>
+      </View>
     </View>
   );
 }

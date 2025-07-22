@@ -24,12 +24,10 @@ const useVoyage = () => {
                 setIsLoading(true);
 
                 const apiResponse: Voyage[] = await VoyageService.getVoyageList({}) as Voyage[] | [];
-                console.log("apiResponse : ", apiResponse);
-
+                
                 setTrips(apiResponse || []);
                 setFilteredTrips(apiResponse || []);
                 setPopularVoyage(apiResponse.slice(0, 3));
-                console.log("popularVoyage : ", popularVoyage);
             } catch (error) {
                 console.error('Error fetching trips:', error);
             } finally {
@@ -67,9 +65,6 @@ const useVoyage = () => {
     };
 
     const getVoyageById = async (id: string): Promise<VoyageDetail | undefined> => {
-        // Si les voyages ne sont pas encore chargés, charger directement depuis les données brutes
-        console.log("trips : ", trips);
-        console.log("id : ", id);
         setIsGetVoyageByIdLoading(true);
         try {
             const voyage = await VoyageService.getVoyageById(id) as VoyageDetail;
@@ -114,12 +109,10 @@ const useVoyage = () => {
             setIsLoading(true);
 
             const apiResponse: Voyage[] = await VoyageService.getVoyageList({}) as Voyage[];
-            console.log("apiResponse : ", apiResponse);
 
             setTrips(apiResponse || []);
             setFilteredTrips(apiResponse || []);
             setPopularVoyage(apiResponse.slice(0, 3));
-            console.log("popularVoyage : ", popularVoyage);
         } catch (error) {
             console.error('Error fetching trips:', error);
         } finally {
